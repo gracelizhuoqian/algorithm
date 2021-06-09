@@ -83,5 +83,20 @@ const getNameSpace = (name) => {
   })
 }
 getNameSpace('a.b.c')
-console.log(MyApp)
+/* 
+MyApp{
+  a:{
+    b:{
+      c:{}
+    }
+  }
+}
+**/
 ```
+
+2. 闭包  
+   如上第一种代理模式下，为了将`instance`封装在其中，代理实现需要使用闭包
+
+### 其他语言
+
+js 是单线程，当出现多线程的情况下，需要注意并发，可以通过加锁来控制，作为了解不做详述
