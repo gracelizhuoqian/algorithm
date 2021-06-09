@@ -62,3 +62,26 @@ singletonDemo('jolly')
 singletonDemo('test')
 // ConstructorExp {name: "jolly"}
 ```
+
+### js 特性单例
+
+js 无类的概念，本身单例可以通过全局变量实现。但全局变量会有命名空间污染，解决方案：
+
+1. 命名空间  
+   一个灵活的动态命名空间方案：
+
+```js
+const MyApp = {}
+const getNameSpace = (name) => {
+  const nameArr = name.split('.')
+  let current = MyApp
+  nameArr.forEach((name) => {
+    if (!current[name]) {
+      current[name] = {}
+    }
+    current = current[name]
+  })
+}
+getNameSpace('a.b.c')
+console.log(MyApp)
+```
