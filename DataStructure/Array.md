@@ -52,6 +52,41 @@ function findDuplicate(arr) {
 }
 ```
 
+**_(LeetCode219)_**
+给定一个整数数组和一个整数  k，判断数组中**是否存在**两个不同的索引  i  和  j，使得  nums [i] = nums [j]，并且 i 和 j  的差的 绝对值 至多为 k。
+输入: nums = [1,2,3,1], k = 3
+输出: true
+
+1. 变形,需要记录索引
+2. 不是所有都要满足，而是只要有一对索引满足即可
+
+```js
+function findDuplicate(arr, k) {
+  const hash = {}
+  const len = arr.length
+  for (let i = 0; i < len; i++) {
+    if (hash[arr[i]] === undefined) {
+      hash[arr[i]] = [i]
+    } else {
+      hash[arr[i]].push(i)
+    }
+  }
+  let res = false
+  // 注意forEach的返回不是函数的返回
+  Object.keys(hash).forEach((num) => {
+    let len = hash[num].length
+    if (len > 1) {
+      for (let i = 1; i < len; i++) {
+        if (hash[num][i] - hash[num][i - 1] <= k) {
+          res = true
+        }
+      }
+    }
+  })
+  return res
+}
+```
+
 #### 解法 3:索引交换
 
 利用题目条件，数字范围在`0~n-1`，索引下标和数字应该一一对应，把数字放在对应的位置，一定有数字不能对应索引，在交换的过程中就能发现一个索引对应了两个数字。  
