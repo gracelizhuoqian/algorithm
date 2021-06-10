@@ -176,3 +176,84 @@ const deleteRepeatNumber = (nums) => {
   return slow + 1
 }
 ```
+
+### 删除有序数组中的重复项 II
+
+**_（LeetCode 80）_**
+给你一个有序数组 nums ，请你 原地 删除重复出现的元素，使每个元素 最多出现两次 ，返回删除后数组的新长度。
+
+不要使用额外的数组空间，你必须在 原地 修改输入数组 并在使用 O(1) 额外空间的条件下完成。
+输入：nums = [1,1,1,2,2,3]
+输出：5, nums = [1,1,2,2,3]
+解释：函数应返回新长度 length = 5, 并且原数组的前五个元素被修改为 1, 1, 2, 2, 3 。 不需要考虑数组中超出新长度后面的元素。
+
+#### 1. 单指针
+
+需要设置一个标记变量，标记当前元素是否已经重复出现了，默认为`false`，当出现一次时为`true`不进行操作，后面继续遇到重复元素并且状态为`true`时则可以进行删除
+
+扩展：如果元素最多出现次数为`n`，则状态变量设置为整型，当值增加到`n-1`后遇到重复元素进行删除
+
+```js
+const deleteRepeatNumber = (nums) => {
+  const len = nums.length
+  if (len <= 2) {
+    return len
+  }
+  let hasOneRepeat = false
+  let p = 1
+  // 判断条件这里务必注意，随着splice操作，数组长度会更改
+  while (p < nums.length) {
+    if (nums[p] !== nums[p - 1]) {
+      hasOneRepeat = false
+      p++
+    } else {
+      if (!hasOneRepeat) {
+        // 第一次重复
+        hasOneRepeat = true
+        p++
+      } else {
+        // 不是第一次重复了
+        nums.splice(p, 1)
+      }
+    }
+  }
+  return nums.length
+}
+```
+
+#### 2.双指针
+
+没啥特别的，移动慢指针时候，再多判断一次，如果后面元素相同则再向后移动一个
+
+```js
+const deleteRepeatNumber = (nums) => {
+  const len = nums.length
+  if (len <= 2) {
+    return len
+  }
+  let slow = 0
+  let fast = 1
+  // 注意这里，需要让fast指向第一个不同的元素
+  while (fast < len && nums[fast] === nums[slow]) {
+    fast++
+  }
+  // 如果第一个元素就有重复，需要slow后移
+  if (fast > 1) {
+    slow++
+    nums[slow] = nums[slow - 1]
+  }
+  while (fast < len) {
+    if (nums[fast] !== nums[slow]) {
+      slow++
+      nums[slow] = nums[fast]
+      if (fast < len - 1 && nums[fast] === nums[fast + 1]) {
+        slow++
+        nums[slow] = nums[slow - 1]
+        fast++
+      }
+    }
+    fast++
+  }
+  return slow + 1
+}
+```
