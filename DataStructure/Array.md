@@ -119,3 +119,60 @@ const findDuplicate = (nums) => {
   return start
 }
 ```
+
+### 删除有序数组中的重复项
+
+**_（LeetCode 26）_**  
+给你一个有序数组 nums ，请你 原地 删除重复出现的元素，使每个元素 只出现一次 ，返回删除后数组的新长度。
+
+不要使用额外的数组空间，你必须在 原地 修改输入数组 并在使用 O(1) 额外空间的条件下完成。
+
+输入：nums = [1,1,2]
+输出：2, nums = [1,2]
+解释：函数应该返回新的长度 2 ，并且原数组 nums 的前两个元素被修改为 1, 2 。不需要考虑数组中超出新长度后面的元素。
+
+#### 解法 1:单指针
+
+总是比较当前元素和前一个元素，如果相等，则删除当前元素，指针后移
+
+```js
+const deleteRepeatNumber = (nums) => {
+  const len = nums.length
+  if (len <= 1) {
+    return len
+  }
+  let p = 1
+  // nums.length会动态变化
+  while (p < nums.length) {
+    if (nums[p] === nums[p - 1]) {
+      nums.splice(p, 1)
+    } else {
+      p++
+    }
+  }
+  return nums.length
+}
+```
+
+#### 解法 2:双指针
+
+慢指针指向更新的元素，每次移动都意味着有不同的元素填在了当前位置，快指针向前寻找下一个不重复的元素。
+
+```js
+const deleteRepeatNumber = (nums) => {
+  const len = nums.length
+  let slow = 0
+  let fast = 1
+  while (fast < len) {
+    if (nums[slow] !== nums[fast]) {
+      //fast指向了新的不同元素
+      slow++
+      nums[slow] = nums[fast]
+    }
+    // 无论fast是不是要更新的元素，都要向后移动
+    fast++
+  }
+  // slow是最后一个元素的索引，长度要加1
+  return slow + 1
+}
+```
