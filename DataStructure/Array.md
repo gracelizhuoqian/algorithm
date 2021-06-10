@@ -92,6 +92,8 @@ function findDuplicate(arr, k) {
 利用题目条件，数字范围在`0~n-1`，索引下标和数字应该一一对应，把数字放在对应的位置，一定有数字不能对应索引，在交换的过程中就能发现一个索引对应了两个数字。  
 时间复杂度`O(n)`，空间复杂度`O(1)`
 
+相同解法**_（LeetCode 442）_**
+
 ```js
 function findDuplicate(arr) {
   const len = arr.length
