@@ -294,3 +294,132 @@ const deleteRepeatNumber = (nums) => {
   return slow + 1
 }
 ```
+
+## 二维数组
+
+### 二维数组中的查找
+
+**_（剑指 offer 03）/(LeetCode 240. 搜索二维矩阵 II)_**
+
+编写一个高效的算法来搜索  m x n  矩阵 matrix 中的一个目标值 target 。该矩阵具有以下特性：
+
+每行的元素从左到右升序排列。
+每列的元素从上到下升序排列。
+
+输入：matrix = [[1,4,7,11,15],[2,5,8,12,19],[3,6,9,16,22],[10,13,14,17,24],[18,21,23,26,30]], target = 20
+输出：false
+
+#### 解法 1.二分查找
+
+一维的二分查找是以中间值线性分为两个部分，分别是有序的。  
+二维的二分查找可以以中间分成四个部分，左上，右上，左下，右下，每个子数组可以递归查找。  
+二维数组的特征是有数的范围，左上角是最小，右下角是最大。不在这个范围直接返回。
+
+```js
+// 在任意子二维数组中查找
+var searchBinary = function (
+  matrix,
+  target,
+  rowStart,
+  rowEnd,
+  colStart,
+  colEnd
+) {
+  let r = matrix.length
+  let c = matrix[0].length
+  // 超出范围
+  if (rowStart < 0 || rowEnd >= r || colStart < 0 || colEnd >= c) {
+    return false
+  }
+  // 直接等于左上角的最小值（右下角的最大值）
+  if (
+    matrix[rowStart][colStart] === target ||
+    matrix[rowEnd][colEnd] === target
+  ) {
+    return true
+    // 不在[min,max]中
+  } else if (
+    matrix[rowStart][colStart] > target ||
+    matrix[rowEnd][colEnd] < target
+  ) {
+    return false
+  } else {
+    // 在(min,max)范围内
+    // 子数组变成了一维数组，直接换成普通的二分查找
+    if (rowStart === rowEnd) {
+      let i = colStart
+      let j = colEnd
+      while (i <= j && i >= 0 && j >= 0 && i <= colEnd && j <= colEnd) {
+        let mid = Math.floor((i + j) / 2)
+        if (matrix[rowStart][mid] === target) {
+          return true
+        } else if (matrix[rowStart][mid] > target) {
+          j = mid - 1
+        } else {
+          i = mid + 1
+        }
+      }
+      return false
+    }
+    if (colStart === colEnd) {
+      let i = rowStart
+      let j = rowEnd
+      while (i <= j && i >= 0 && j >= 0 && i <= rowEnd && j <= rowEnd) {
+        let mid = Math.floor((i + j) / 2)
+        if (matrix[mid][colStart] === target) {
+          return true
+        } else if (matrix[mid][colStart] > target) {
+          j = mid - 1
+        } else {
+          i = mid + 1
+        }
+      }
+      return false
+    }
+    // 递归查找四个子数组
+    if (rowStart !== rowEnd && colStart !== colEnd) {
+      let rowMid = Math.floor((rowStart + rowEnd) / 2)
+      let colMid = Math.floor((colStart + colEnd) / 2)
+      return (
+        searchBinary(matrix, target, rowStart, rowMid, colStart, colMid) ||
+        searchBinary(matrix, target, rowStart, rowMid, colMid + 1, colEnd) ||
+        searchBinary(matrix, target, rowMid + 1, rowEnd, colStart, colMid) ||
+        searchBinary(matrix, target, rowMid + 1, rowEnd, colMid + 1, colEnd)
+      )
+    }
+  }
+  // return false
+}
+var searchMatrix = function (matrix, target) {
+  let rows = matrix.length
+  let cols = matrix[0].length
+  return searchBinary(matrix, target, 0, rows - 1, 0, cols - 1)
+}
+```
+
+#### 解法 2.渐进筛选
+
+以左下角或者右上角开始进行判断，小于右上角，则排除右上角所在列；大于右上角，则排除所在行。
+直到变成一维数组。
+
+```js
+// 存储下当前所在筛选数组的右上角的位置
+const searchMatrix = function (matrix, target) {
+  const rows = matrix.length
+  const cols = matrix[0].length
+  let row = 0
+  let col = cols - 1
+  while (row < rows && col >= 0) {
+    if (matrix[row][col] === target) {
+      return true
+    } else if (matrix[row][col] < target) {
+      // 排除所在行
+      row++
+    } else {
+      // 排除所在列
+      col--
+    }
+  }
+  return false
+}
+```
