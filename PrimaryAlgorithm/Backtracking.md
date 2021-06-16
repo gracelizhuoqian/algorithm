@@ -157,3 +157,44 @@ var movingCount = function (m, n, k) {
   return res
 }
 ```
+
+### 打印从 1 到最大的 n 位数
+
+**_(剑指 offer 17)_**
+
+输入数字 n，按顺序打印出从 1 到最大的 n 位十进制数。比如输入 3，则打印出 1、2、3 一直到最大的 3 位数 999。
+
+```js
+let res = []
+const printNum = (num) => {
+  res.push(num.join('').replace(/^0*/, ''))
+}
+const printSubNum = (num, index) => {
+  let len = num.length
+  if (index === len - 1) {
+    printNum(num)
+    return
+  }
+  for (let i = 0; i < 10; i++) {
+    num[index + 1] = i + ''
+    printSubNum(num, index + 1)
+  }
+}
+const printNumbers = (n) => {
+  res = []
+  if (n <= 0) {
+    return res
+  }
+  const numArray = []
+  for (let i = 0; i < n; i++) {
+    numArray[i] = '0'
+  }
+  for (let i = 0; i < 10; i++) {
+    numArray[0] = i - '0'
+    printSubNum(numArray, 0)
+  }
+  // 这里多了一个0
+  res.shift()
+  return res
+}
+```
