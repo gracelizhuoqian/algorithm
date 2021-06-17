@@ -57,3 +57,92 @@ var cuttingRope = function (n) {
   return dp[n]
 }
 ```
+
+### 正则表达式匹配
+
+**_（剑指 offer 19）/（LeetCode 10）_**
+请实现一个函数用来匹配包含'. '和'_'的正则表达式。模式中的字符'.'表示任意一个字符，而'_'表示它前面的字符可以出现任意次（含 0 次）。在本题中，匹配是指字符串的所有字符匹配整个模式。例如，字符串"aaa"与模式"a.a"和"ab*ac*a"匹配，但与"aa.a"和"ab\*a"均不匹配。
+
+示例 1:
+
+输入:
+s = "aa"
+p = "a"
+输出: false
+解释: "a" 无法匹配 "aa" 整个字符串。
+
+#### 思路
+
+两个指针分别指向字符串和模式，当两个对应位置无法以任何形式匹配，失败；当模式结束字符串没有结束，失败；当模式没有结束字符串结束，看剩下的模式是否可以和空匹配；
+
+```js
+/**
+ * @param {string} s
+ * @param {string} p
+ * @return {boolean}
+ */
+const equalEmpty = (pattern, start) => {
+  // 任意一个字符后面都有至少一个*
+  for (let i = start; i < pattern.length; i++) {
+    if (pattern[i] !== '*') {
+      if (i === pattern.length - 1 || pattern[i + 1] !== '*') {
+        return false
+      }
+    }
+  }
+  return true
+}
+const subMatch = (str, pattern, p1, p2) => {
+  const sLength = str.length
+  const pLength = pattern.length
+  if (p1 === sLength && p2 === pLength) {
+    return true
+  }
+  if (p1 === sLength && p2 < pLength) {
+    return equalEmpty(pattern, p2)
+  }
+  if (p1 < sLength && p2 === pLength) {
+    return false
+  }
+  // 都妹到结尾
+  if (str[p1] === pattern[p2]) {
+    // 字符相匹配，分两种，后面是不是*
+    if (p2 < pLength - 1 && pattern[p2 + 1] === '*') {
+      // 可以匹配往下走，也可以不走，也可以不匹配当前
+      return (
+        subMatch(str, pattern, p1 + 1, p2) ||
+        subMatch(str, pattern, p1 + 1, p2 + 2) ||
+        // 务必注意字符串可以不继续走的情况
+        subMatch(str, pattern, p1, p2 + 2)
+      )
+    } else {
+      return subMatch(str, pattern, p1 + 1, p2 + 1)
+    }
+  } else {
+    // 字符不匹配，当前不是.后面是*
+    if (pattern[p2] !== '.' && p2 < pLength - 1 && pattern[p2 + 1] === '*') {
+      return subMatch(str, pattern, p1, p2 + 2)
+    }
+    // 字符不匹配，当前不是.后面不是*
+    if (pattern[p2] !== '.' && (p2 >= pLength - 1 || pattern[p2 + 1] !== '*')) {
+      return false
+    }
+    // 字符匹配，当前是.后面是*，.*可以匹配任意，也可以不走
+    if (pattern[p2] === '.' && p2 < pLength - 1 && pattern[p2 + 1] === '*') {
+      return (
+        subMatch(str, pattern, p1 + 1, p2) ||
+        subMatch(str, pattern, p1 + 1, p2 + 2) ||
+        // 务必注意字符串可以不继续走的情况
+        subMatch(str, pattern, p1, p2 + 2)
+      )
+    }
+    // 字符匹配，当前是.后面不是*
+    if (pattern[p2] === '.' && (p2 >= pLength - 1 || pattern[p2 + 1] !== '*')) {
+      return subMatch(str, pattern, p1 + 1, p2 + 1)
+    }
+  }
+}
+const isMatch = (str, pattern) => {
+  return subMatch(str, pattern, 0, 0)
+}
+```
