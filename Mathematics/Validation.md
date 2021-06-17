@@ -41,8 +41,6 @@ const isNumber = function (s) {
     return false
   }
   let isNumber = scanSignedInt(s)
-  let pointSection = true
-  let eSection = true
   // 可以有的 小数部分
   if (s[index] === '.') {
     index++
