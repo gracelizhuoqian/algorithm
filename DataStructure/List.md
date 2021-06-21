@@ -114,3 +114,49 @@ const deleteDuplicates = function (head) {
   return guard.next
 }
 ```
+
+### 链表的环的入口节点
+
+**_（LeetCode 142. 环形链表 II）_**
+
+给定一个链表，返回链表开始入环的第一个节点。  如果链表无环，则返回  null。
+
+为了表示给定链表中的环，我们使用整数 pos 来表示链表尾连接到链表中的位置（索引从 0 开始）。 如果 pos 是 -1，则在该链表中没有环。注意，pos 仅仅是用于标识环的情况，并不会作为参数传递到函数中。
+
+说明：不允许修改给定的链表。
+
+进阶：
+
+你是否可以使用 O(1) 空间解决此题？
+
+#### 思路
+
+1. 快慢指针判断是否有环
+2. 设环的长度为 c，链表头到环入口为 a，两指针相遇的位置到入口为 b；则慢指针走了`a+b`,快走了`2(a+b)`。根据设定，有`2(a+b)=a+nc+b`，从而`a+b=nc`。从相遇节点开始，第三个指针从链表头开始移动，慢指针和第三个指针相遇的时候，第三个指针走了 a，慢指针走了 nc。他们相遇在环入口。
+
+```js
+const detectCycle = (head) => {
+  if (head === null) {
+    return null
+  }
+  let fast = head
+  let slow = head
+  let p = head
+  while (fast && fast.next) {
+    fast = fast.next
+    fast = fast.next
+    slow = slow.next
+    if (slow === fast) {
+      break
+    }
+  }
+  if (!fast || !fast.next) {
+    return null
+  }
+  while (p !== slow) {
+    p = p.next
+    slow = slow.next
+  }
+  return slow
+}
+```
