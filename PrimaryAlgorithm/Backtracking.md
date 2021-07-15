@@ -12,8 +12,8 @@
 
 给定一个  m x n 二维字符网格  board 和一个字符串单词  word 。如果  word 存在于网格中，返回 true ；否则，返回 false 。
 
-单词必须按照字母顺序，通过相邻的单元格内的字母构成，其中“相邻”单元格是那些水平相邻或垂直相邻的单元格。同一个单元格内的字母不允许被重复使用。  
-输入：board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "SEE"  
+单词必须按照字母顺序，通过相邻的单元格内的字母构成，其中“相邻”单元格是那些水平相邻或垂直相邻的单元格。同一个单元格内的字母不允许被重复使用。
+输入：board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "SEE"
 输出：true
 
 ```js
@@ -195,6 +195,55 @@ const printNumbers = (n) => {
   }
   // 这里多了一个0
   res.shift()
+  return res
+}
+```
+
+### 字符串的排列
+
+**_(剑指 offer 38)/（面金 8.8）_**
+1. 每次固定一个位置 i，该位置和后面所有位置分别交换，i 递增；
+2. 注意重复元素
+
+对于有重复元素的，构造字母哈希表，Map={a:1,b:3,c:2};
+每次**选择**一个字母放在当前位置，比如选择b，则**路径**为 `path + b`，后面是 Map={a:1,b:2,c:2}的全排列
+
+```js
+const buildMap=(str)=>{
+  const len=str.length;
+  const map={};
+  for(let i=0;i<len;i++){
+    if(!map[str[i]]){
+      map[str[i]]=1;
+    }else{
+      map[str[i]]++;
+    }
+  }
+  return map;
+}
+const subPermutation = (map, path, depth,result) => {
+  // 先找终止条件
+  if(depth===0){
+    result.push(path);
+    return;
+  }
+  // 做选择
+  Object.keys(map).forEach(char=>{
+    // 选择char
+    if(map[char]>0){
+      map[char]--;
+      subPermutation(map,path+char,depth-1,result);
+      map[char]++;
+    }
+  });
+}
+const permutation = (str) => {
+  if (!str) {
+    return []
+  }
+  const res = []
+  const map=buildMap(str);
+  subPermutation(map, '', str.length,res);
   return res
 }
 ```
