@@ -298,10 +298,12 @@ const deleteRepeatNumber = (nums) => {
 
 ### 数组中超过一半的数字
 **_（offer 39）/(LeetCode 169)_**
-#### 思路
-**相同加，不同减**
+
+首先要确认是否允许修改数组。另外要考虑输入的特殊情况，比如空数组，和不存在该数字的数组。
+#### 1.**相同加，不同减**
 每出现一次该数字，该数字出现次数加1，不是该数字就减1。减到0就换数字。该数字超过一半的话，最终次数是正的。
-#### 解法
+
+
 ```js
 const majorityElement=(numArray)=>{
   let len=numArray.length;
@@ -322,6 +324,45 @@ const majorityElement=(numArray)=>{
   return cur;
 }
 ```
+#### 寻找第 k 大的数（partition方法）
+
+当数组排序后，如果存在这种数字，那么它一定是位于中间的数字，也即我们要找到第`n/2`大的数字；可以用快排的思路，任意找到数字`x`，经过 `partition`处理后，位置是 `p`，如果 `p < n/2`，则要找的数字在右边，否则在左边的数字，在缩小范围的数组中递归寻找即可。
+```js
+const findKth=(arr,k,start=0,end=arr.length-1)=>{
+  let len=arr.length;
+  if(len<k||k<0){
+    return false;
+  }
+  let pStart=start;
+  let pEnd=end;
+  let cur=arr[start];
+  while(start<=end){
+    // 找左边第一个比cur大的
+    while(start<=end&&arr[start]<=cur){
+      start++;
+    }
+    // 找右边第一个比cur小的
+    while(start<=end&&arr[end]>=cur){
+      end--;
+    }
+    if(start<=end){
+      let temp=arr[start];
+      arr[start]=arr[end];
+      arr[end]=temp;
+    }
+  }
+  arr[pStart]=arr[end];
+  arr[end]=cur;
+  if(end===k){
+    return cur;
+  }else if(end<k){
+    return findKth(arr,k,end+1,pEnd);
+  }else{
+    return findKth(arr,k,pStart,end-1);
+  }
+}
+```
+
 ## 二维数组
 
 ### 二维数组中的查找
