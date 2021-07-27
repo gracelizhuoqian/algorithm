@@ -14,7 +14,7 @@
 
 ```js
 const sink=(arr,index,k)=>{
-  let lastParent=Math.floor((k-1)/2);
+  let lastParent=Math.floor((k-2)/2);
   let cur=index;
   while(cur<=lastParent){
     let leftIndex=cur*2+1;
@@ -29,8 +29,8 @@ const sink=(arr,index,k)=>{
       arr[cur]=maxValue;
       curNode=leftIndex;
     }
-    // 有右节点
-    if(rightIndex<k-1){
+    // 有右节点，这里注意判断清楚有右节点的情况
+    if(rightIndex<=k-1){
       maxValue=Math.max(arr[rightIndex],arr[leftIndex],arr[cur]);
       if(maxValue===arr[cur]){
         break;
@@ -52,7 +52,8 @@ const sink=(arr,index,k)=>{
   }
 }
 const buildHeap=(arr,k)=>{
-  let lastParent=Math.floor((k-1)/2);
+  // 注意一定要找准最后一个父节点的下标，k表示数量，k-1是最后节点下标
+  let lastParent=Math.floor((k-2)/2);
   for(let i=lastParent;i>=0;i--){
     sink(arr,i,k);
   }
