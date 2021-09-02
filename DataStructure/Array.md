@@ -327,6 +327,7 @@ const majorityElement=(numArray)=>{
 #### 寻找第 k 大的数（partition方法）
 
 当数组排序后，如果存在这种数字，那么它一定是位于中间的数字，也即我们要找到第`n/2`大的数字；可以用快排的思路，任意找到数字`x`，经过 `partition`处理后，位置是 `p`，如果 `p < n/2`，则要找的数字在右边，否则在左边的数字，在缩小范围的数组中递归寻找即可。
+这个的时间复杂度是`O(n)`，因为`O(N+N/2+N/4+...)=O(N)`。
 ```js
 const findKth=(arr,k,start=0,end=arr.length-1)=>{
   let len=arr.length;
