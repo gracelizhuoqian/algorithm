@@ -146,3 +146,45 @@ const isMatch = (str, pattern) => {
   return subMatch(str, pattern, 0, 0)
 }
 ```
+
+
+### 最大子数组的和
+
+***(Offer 42)***
+
+#### 思路
+以【i】结尾的子数组的和的最大值为`s[i]`，则`s[i+1]=Max(n[i+1],s[i]+n[i+1])`，如果`s[i]`是负值，则 `s[i+1]=n[i+1]`，否则为前者。最终结果为`max(s[i])`。
+
+#### 代码
+```js
+/**
+ * @param {number[]} nums
+ * @return {number}
+ */
+var maxSubArray = function(nums) {
+  const s=[];
+  s[0]=nums[0];
+  let sum=s[0];
+  for(let i=1;i<nums.length;i++){
+    s[i]=Math.max(s[i-1]+nums[i],nums[i]);
+  }
+  return Math.max(...s);
+};
+
+// 内存优化
+var maxSubArray = function(nums) {
+  const s=[];
+  s[0]=nums[0];
+  let sum=s[0];
+  let pre=sum;
+  for(let i=1;i<nums.length;i++){
+    if(pre<0){
+      pre=nums[i];
+    }else{
+      pre=pre+nums[i];
+    }
+    sum=Math.max(sum,pre);
+  }
+  return sum;
+};
+```
