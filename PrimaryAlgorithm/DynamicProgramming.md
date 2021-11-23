@@ -26,7 +26,7 @@
 
 2 <= n <= 58
 
-#### 分析
+#### 1. 动归解法（只能处理n<=58的数）
 
 1. m 是个变量，当 m>n 时，不够剪，有的段长度为 0，乘积为 0
 2. m==n 时，乘积最大为 1，每段绳子长度都为 1
@@ -58,6 +58,33 @@ var cuttingRope = function (n) {
 }
 ```
 
+#### 2. 贪心算法
+n>4时候，尽可能多割3，n=4时候，分成2*2，具体原理可用数学归纳法证明。
+```js
+var integerBreak=function(s){
+  if (s <= 1) {
+    return 0;
+  }
+  if (s === 2) {
+    return 1;
+  }
+  if (s === 3) {
+    return 2;
+  }
+  let temp=1;
+  while(s>4){
+    temp = temp * 3 % 1000000007;
+    s-=3;
+  }
+  if(s===4){
+    temp*=4;
+  }else{
+    temp*=s;
+  }
+  temp = temp % 1000000007;
+  return temp;
+}
+```
 ### 正则表达式匹配
 
 **_（剑指 offer 19）/（LeetCode 10）_**
@@ -188,3 +215,4 @@ var maxSubArray = function(nums) {
   return sum;
 };
 ```
+
