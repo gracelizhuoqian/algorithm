@@ -216,3 +216,70 @@ var maxSubArray = function(nums) {
 };
 ```
 
+
+### 把数组排成最小的数
+输入一个非负整数数组，把数组里所有数字拼接起来排成一个数，打印能拼接出的所有数字中最小的一个。
+
+示例 1:
+输入: [10,2]
+输出: "102"
+
+
+示例 2:
+输入: [3,30,34,5,9]
+输出: "3033459"
+ 
+提示:
+0 < nums.length <= 100
+说明:
+输出结果可能非常大，所以你需要返回一个字符串而不是整数
+拼接起来的数字可能会有前导 0，最后结果不需要去掉前导 0
+
+
+#### 思路
+1. 位数相同的情况下，31和23，可以组成3123或者2331，第一位小的应该放在前面，从高位到低位逐位比较，较小的放在前面。
+2. 位数不同的情况下，分别按照补位的大小判断
+
+#### 代码
+```js
+var minNumber = function(nums) {
+    nums.sort((a,b)=>{
+      let changeFlag=1;
+      // 固定aa是小字符串
+      let aa=String(a);
+      let bb=String(b);
+      if(aa.length>bb.length){
+        let temp=aa;
+        aa=bb;
+        bb=temp;
+        changeFlag=-1;
+      }
+      for(let i=0;i<aa.length;i++){
+        if(aa[i]!==bb[i]){
+          return (aa[i]-bb[i])*changeFlag;
+        }
+      }
+      // 补位比较
+      for(let i=aa.length;i<bb.length+aa.length;i++){
+          // 短在前
+          let shortFront=bb[i-aa.length];
+          // 长在前
+          let longFront
+          if(i>=bb.length){
+            longFront=aa[i-bb.length];
+          }else{
+            longFront=bb[i];
+          }
+          if(shortFront!==longFront){
+            return (shortFront-longFront)*changeFlag;
+          }
+      }
+      return changeFlag;
+    });
+    let result='';
+    nums.forEach(n=>{
+        result+=n;
+    });
+    return result
+};
+```
