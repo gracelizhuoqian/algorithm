@@ -26,7 +26,7 @@
 
 2 <= n <= 58
 
-#### 1. 动归解法（只能处理n<=58的数）
+#### 1. 动归解法（只能处理 n<=58 的数）
 
 1. m 是个变量，当 m>n 时，不够剪，有的段长度为 0，乘积为 0
 2. m==n 时，乘积最大为 1，每段绳子长度都为 1
@@ -35,33 +35,35 @@
 ```js
 var cuttingRope = function (n) {
   if (n < 2) {
-    return 0
+    return 0;
   }
   if (n === 2) {
-    return 1
+    return 1;
   }
   if (n === 3) {
-    return 2
+    return 2;
   }
   // 注意这里的值，和单独的结果是不一样的，当n=2时候，如果作为绳子全长，其结果为1；如果作为一段，其值应该为2
-  const dp = [0, 1, 2, 3]
+  const dp = [0, 1, 2, 3];
   for (let i = 4; i <= n; i++) {
-    dp[i] = 0
+    dp[i] = 0;
     for (let j = 1; j <= i / 2; j++) {
-      let temp = dp[j] * dp[i - j]
+      let temp = dp[j] * dp[i - j];
       if (temp > dp[i]) {
-        dp[i] = temp
+        dp[i] = temp;
       }
     }
   }
-  return dp[n]
-}
+  return dp[n];
+};
 ```
 
 #### 2. 贪心算法
-n>4时候，尽可能多割3，n=4时候，分成2*2，具体原理可用数学归纳法证明。
+
+n>4 时候，尽可能多割 3，n=4 时候，分成 2\*2，具体原理可用数学归纳法证明。
+
 ```js
-var integerBreak=function(s){
+var integerBreak = function (s) {
   if (s <= 1) {
     return 0;
   }
@@ -71,20 +73,21 @@ var integerBreak=function(s){
   if (s === 3) {
     return 2;
   }
-  let temp=1;
-  while(s>4){
-    temp = temp * 3 % 1000000007;
-    s-=3;
+  let temp = 1;
+  while (s > 4) {
+    temp = (temp * 3) % 1000000007;
+    s -= 3;
   }
-  if(s===4){
-    temp*=4;
-  }else{
-    temp*=s;
+  if (s === 4) {
+    temp *= 4;
+  } else {
+    temp *= s;
   }
   temp = temp % 1000000007;
   return temp;
-}
+};
 ```
+
 ### 正则表达式匹配
 
 **_（剑指 offer 19）/（LeetCode 10）_**
@@ -111,175 +114,207 @@ p = "a"
 const equalEmpty = (pattern, start) => {
   // 任意一个字符后面都有至少一个*
   for (let i = start; i < pattern.length; i++) {
-    if (pattern[i] !== '*') {
-      if (i === pattern.length - 1 || pattern[i + 1] !== '*') {
-        return false
+    if (pattern[i] !== "*") {
+      if (i === pattern.length - 1 || pattern[i + 1] !== "*") {
+        return false;
       }
     }
   }
-  return true
-}
+  return true;
+};
 const subMatch = (str, pattern, p1, p2) => {
-  const sLength = str.length
-  const pLength = pattern.length
+  const sLength = str.length;
+  const pLength = pattern.length;
   if (p1 === sLength && p2 === pLength) {
-    return true
+    return true;
   }
   if (p1 === sLength && p2 < pLength) {
-    return equalEmpty(pattern, p2)
+    return equalEmpty(pattern, p2);
   }
   if (p1 < sLength && p2 === pLength) {
-    return false
+    return false;
   }
   // 都妹到结尾
   if (str[p1] === pattern[p2]) {
     // 字符相匹配，分两种，后面是不是*
-    if (p2 < pLength - 1 && pattern[p2 + 1] === '*') {
+    if (p2 < pLength - 1 && pattern[p2 + 1] === "*") {
       // 可以匹配往下走，也可以不走，也可以不匹配当前
       return (
         subMatch(str, pattern, p1 + 1, p2) ||
         subMatch(str, pattern, p1 + 1, p2 + 2) ||
         // 务必注意字符串可以不继续走的情况
         subMatch(str, pattern, p1, p2 + 2)
-      )
+      );
     } else {
-      return subMatch(str, pattern, p1 + 1, p2 + 1)
+      return subMatch(str, pattern, p1 + 1, p2 + 1);
     }
   } else {
     // 字符不匹配，当前不是.后面是*
-    if (pattern[p2] !== '.' && p2 < pLength - 1 && pattern[p2 + 1] === '*') {
-      return subMatch(str, pattern, p1, p2 + 2)
+    if (pattern[p2] !== "." && p2 < pLength - 1 && pattern[p2 + 1] === "*") {
+      return subMatch(str, pattern, p1, p2 + 2);
     }
     // 字符不匹配，当前不是.后面不是*
-    if (pattern[p2] !== '.' && (p2 >= pLength - 1 || pattern[p2 + 1] !== '*')) {
-      return false
+    if (pattern[p2] !== "." && (p2 >= pLength - 1 || pattern[p2 + 1] !== "*")) {
+      return false;
     }
     // 字符匹配，当前是.后面是*，.*可以匹配任意，也可以不走
-    if (pattern[p2] === '.' && p2 < pLength - 1 && pattern[p2 + 1] === '*') {
+    if (pattern[p2] === "." && p2 < pLength - 1 && pattern[p2 + 1] === "*") {
       return (
         subMatch(str, pattern, p1 + 1, p2) ||
         subMatch(str, pattern, p1 + 1, p2 + 2) ||
         // 务必注意字符串可以不继续走的情况
         subMatch(str, pattern, p1, p2 + 2)
-      )
+      );
     }
     // 字符匹配，当前是.后面不是*
-    if (pattern[p2] === '.' && (p2 >= pLength - 1 || pattern[p2 + 1] !== '*')) {
-      return subMatch(str, pattern, p1 + 1, p2 + 1)
+    if (pattern[p2] === "." && (p2 >= pLength - 1 || pattern[p2 + 1] !== "*")) {
+      return subMatch(str, pattern, p1 + 1, p2 + 1);
     }
   }
-}
+};
 const isMatch = (str, pattern) => {
-  return subMatch(str, pattern, 0, 0)
-}
+  return subMatch(str, pattern, 0, 0);
+};
 ```
-
 
 ### 最大子数组的和
 
-***(Offer 42)***
+**_(Offer 42)_**
 
 #### 思路
+
 以【i】结尾的子数组的和的最大值为`s[i]`，则`s[i+1]=Max(n[i+1],s[i]+n[i+1])`，如果`s[i]`是负值，则 `s[i+1]=n[i+1]`，否则为前者。最终结果为`max(s[i])`。
 
 #### 代码
+
 ```js
 /**
  * @param {number[]} nums
  * @return {number}
  */
-var maxSubArray = function(nums) {
-  const s=[];
-  s[0]=nums[0];
-  let sum=s[0];
-  for(let i=1;i<nums.length;i++){
-    s[i]=Math.max(s[i-1]+nums[i],nums[i]);
+var maxSubArray = function (nums) {
+  const s = [];
+  s[0] = nums[0];
+  let sum = s[0];
+  for (let i = 1; i < nums.length; i++) {
+    s[i] = Math.max(s[i - 1] + nums[i], nums[i]);
   }
   return Math.max(...s);
 };
 
 // 内存优化
-var maxSubArray = function(nums) {
-  const s=[];
-  s[0]=nums[0];
-  let sum=s[0];
-  let pre=sum;
-  for(let i=1;i<nums.length;i++){
-    if(pre<0){
-      pre=nums[i];
-    }else{
-      pre=pre+nums[i];
+var maxSubArray = function (nums) {
+  const s = [];
+  s[0] = nums[0];
+  let sum = s[0];
+  let pre = sum;
+  for (let i = 1; i < nums.length; i++) {
+    if (pre < 0) {
+      pre = nums[i];
+    } else {
+      pre = pre + nums[i];
     }
-    sum=Math.max(sum,pre);
+    sum = Math.max(sum, pre);
   }
   return sum;
 };
 ```
 
-
 ### 把数组排成最小的数
+
 输入一个非负整数数组，把数组里所有数字拼接起来排成一个数，打印能拼接出的所有数字中最小的一个。
 
 示例 1:
 输入: [10,2]
 输出: "102"
 
-
-示例 2:
+示例  2:
 输入: [3,30,34,5,9]
 输出: "3033459"
- 
+
 提示:
 0 < nums.length <= 100
 说明:
 输出结果可能非常大，所以你需要返回一个字符串而不是整数
 拼接起来的数字可能会有前导 0，最后结果不需要去掉前导 0
 
-
 #### 思路
-1. 位数相同的情况下，31和23，可以组成3123或者2331，第一位小的应该放在前面，从高位到低位逐位比较，较小的放在前面。
+
+1. 位数相同的情况下，31 和 23，可以组成 3123 或者 2331，第一位小的应该放在前面，从高位到低位逐位比较，较小的放在前面。
 2. 位数不同的情况下，分别按照补位的大小判断
 
 #### 代码
+
 ```js
-var minNumber = function(nums) {
-    nums.sort((a,b)=>{
-      let changeFlag=1;
-      // 固定aa是小字符串
-      let aa=String(a);
-      let bb=String(b);
-      if(aa.length>bb.length){
-        let temp=aa;
-        aa=bb;
-        bb=temp;
-        changeFlag=-1;
+var minNumber = function (nums) {
+  nums.sort((a, b) => {
+    let changeFlag = 1;
+    // 固定aa是小字符串
+    let aa = String(a);
+    let bb = String(b);
+    if (aa.length > bb.length) {
+      let temp = aa;
+      aa = bb;
+      bb = temp;
+      changeFlag = -1;
+    }
+    for (let i = 0; i < aa.length; i++) {
+      if (aa[i] !== bb[i]) {
+        return (aa[i] - bb[i]) * changeFlag;
       }
-      for(let i=0;i<aa.length;i++){
-        if(aa[i]!==bb[i]){
-          return (aa[i]-bb[i])*changeFlag;
-        }
+    }
+    // 补位比较
+    for (let i = aa.length; i < bb.length + aa.length; i++) {
+      // 短在前
+      let shortFront = bb[i - aa.length];
+      // 长在前
+      let longFront;
+      if (i >= bb.length) {
+        longFront = aa[i - bb.length];
+      } else {
+        longFront = bb[i];
       }
-      // 补位比较
-      for(let i=aa.length;i<bb.length+aa.length;i++){
-          // 短在前
-          let shortFront=bb[i-aa.length];
-          // 长在前
-          let longFront
-          if(i>=bb.length){
-            longFront=aa[i-bb.length];
-          }else{
-            longFront=bb[i];
-          }
-          if(shortFront!==longFront){
-            return (shortFront-longFront)*changeFlag;
-          }
+      if (shortFront !== longFront) {
+        return (shortFront - longFront) * changeFlag;
       }
-      return changeFlag;
-    });
-    let result='';
-    nums.forEach(n=>{
-        result+=n;
-    });
-    return result
+    }
+    return changeFlag;
+  });
+  let result = "";
+  nums.forEach((n) => {
+    result += n;
+  });
+  return result;
+};
+```
+
+### 把数字翻译成字符串
+
+当前数字可翻译的字符串数量是`N[s[L]]`，以首个数字为栗，可以两个一组，也可以分别翻译，取决于能不能小于 26。  
+`N[s[L]]=N[s[L-1]]+M[s[0-1]]*N[s[L-2]]`
+
+```js
+var translateNum = function (num) {
+  if (num < 0) {
+    return 0;
+  }
+  if (num < 10) {
+    return 1;
+  }
+  if (num >= 10 && num < 26) {
+    return 2;
+  }
+  if (num >= 26 && num < 100) {
+    return 1;
+  }
+  let numStr = String(num);
+  let frontTwo = parseInt(numStr.substring(0, 2));
+  let restNum1 = parseInt(numStr.substring(1));
+  let restNum2 = parseInt(numStr.substring(2));
+  if (frontTwo < 26) {
+    return translateNum(restNum1) + translateNum(restNum2);
+  } else {
+    return translateNum(restNum1);
+  }
 };
 ```
