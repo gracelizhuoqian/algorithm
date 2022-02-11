@@ -290,8 +290,12 @@ var minNumber = function (nums) {
 
 ### 把数字翻译成字符串
 
+#### 思路
+
 当前数字可翻译的字符串数量是`N[s[L]]`，以首个数字为栗，可以两个一组，也可以分别翻译，取决于能不能小于 26。  
 `N[s[L]]=N[s[L-1]]+M[s[0-1]]*N[s[L-2]]`
+
+#### 代码
 
 ```js
 var translateNum = function (num) {
@@ -316,5 +320,91 @@ var translateNum = function (num) {
   } else {
     return translateNum(restNum1);
   }
+};
+```
+
+### 礼物的最大价值
+
+```js
+// cache[x][y]表示P(x,y)到终点的礼物最大价值
+const cache = [];
+var maxValue = function (grid) {
+  const rows = grid.length;
+  if (rows === 0) {
+    return 0;
+  }
+  for (let i = 0; i < rows; i++) {
+    cache[i] = [];
+    for (let j = 0; j < grid[0].length; j++) {
+      cache[i][j] = 0;
+    }
+  }
+  return maxPointValue(grid, 0, 0);
+};
+
+const maxPointValue = (grid, x, y) => {
+  if (cache[x][y] !== 0) {
+    return cache[x][y];
+  }
+  const rows = grid.length;
+  const columns = grid[0].length;
+  if (x >= rows || y >= columns) {
+    return 0;
+  }
+  let sum = 0;
+  if (x === rows - 1) {
+    for (let i = y; i < columns; i++) {
+      sum += grid[x][i];
+    }
+    return sum;
+  }
+  if (y === columns - 1) {
+    for (let i = x; i < rows; i++) {
+      sum += grid[i][y];
+    }
+    return sum;
+  }
+  sum += grid[x][y];
+  // 向右走
+  let sum1 = maxPointValue(grid, x + 1, y);
+  let sum2 = maxPointValue(grid, x, y + 1);
+  cache[x][y] = sum + Math.max(sum1, sum2);
+  return cache[x][y];
+};
+```
+
+### 最长不含重复字符的子字符串
+
+#### 思路
+
+`T(i)=T(i-1)+M(i)`  
+`T(i)`表示长度 0 ～ i 的字符串的目标子字符串长度，`M(i)`为 0 或者 1。当字符串`s(0~i-1)`中的末尾的长度为`T(i-1)`的字符串是不包含重复字符且不包含字符`s[i]`时，`M(i)`为 1，否则为 0。
+
+#### 代码
+
+```js
+var lengthOfLongestSubstring = function (s) {
+  let cache = {};
+  if (s.length === 0) {
+    return 0;
+  }
+  let maxLength = 1;
+  let flag = true;
+  for (let i = 1; i < s.length; i++) {
+    for (let j = i; j >= i - maxLength; j--) {
+      if (cache[s[j]]) {
+        flag = false;
+        break;
+      } else {
+        cache[s[j]] = 1;
+      }
+    }
+    if (flag) {
+      maxLength++;
+    }
+    cache = {};
+    flag = true;
+  }
+  return maxLength;
 };
 ```
