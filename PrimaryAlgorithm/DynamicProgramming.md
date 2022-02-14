@@ -408,3 +408,39 @@ var lengthOfLongestSubstring = function (s) {
   return maxLength;
 };
 ```
+
+### 丑数
+
+#### 思路
+
+dp[i]表示第 i 个丑数，用三个指针 p2，p3 和 p5。p2 表示当计算 dp[n]时候，前面从 i=1 ～ p2-1 个 dp[i]都已经用*2 得到的结果放在了对应的 dp[i~n-1]的位置，因此下一个位置 dp[n
+]应该至少是后面一个 dp[p2]*2，或者是已经有 dp[1~p3-1]已经通过乘 3 放在了对应后面的位置，下面就是最小的 dp[p3]乘 3，或者是 dp[p5]乘 5。比如结果最小的是 dp[p2]乘 2，下一个用来进行乘 2 比较的就应该是 dp[p2+1]，因为当前 dp[p2]已经用过了，所以就把 p2+1。
+
+根本原理可以理解成，每个位置 dp[i]都要乘 2，乘 3，乘 5 后安排到后面的位置，只是乘的进度不一样，需要用指针来标记他们的进度，有 p2 个都已经乘过 2，p3 个已经乘过 3，p5 个已经乘过 5。
+
+#### 代码
+
+```js
+var nthUglyNumber = function (n) {
+  if (n === 1) {
+    return 1;
+  }
+  let p2 = 1;
+  let p3 = 1;
+  let p5 = 1;
+  const dp=[0,1];
+  for(let i=2;i<=n;i++){
+    dp[i]=Math.min(dp[p2]*2,dp[p3]*3,dp[p5]*5);
+    if(dp[i]===dp[p2]*2){
+      p2++;
+    }
+    if(dp[i]===dp[p3]*3){
+      p3++;
+    }
+    if(dp[i]===dp[p5]*5){
+      p5++;
+    }
+  }
+  return dp[n];
+};
+```
