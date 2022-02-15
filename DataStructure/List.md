@@ -5,16 +5,16 @@
 ```js
 const subPrint = (arr, head) => {
   if (!head) {
-    return
+    return;
   }
-  subPrint(arr, head.next)
-  arr.push(head.val)
-}
+  subPrint(arr, head.next);
+  arr.push(head.val);
+};
 var reversePrint = function (head) {
-  const res = []
-  subPrint(res, head)
-  return res
-}
+  const res = [];
+  subPrint(res, head);
+  return res;
+};
 ```
 
 ### 删除链表的节点
@@ -42,25 +42,25 @@ var reversePrint = function (head) {
 const deleteNode = function (head, p) {
   // 不是尾部节点
   if (p.next !== null) {
-    let next = p.next
-    p.val = next.val
-    p.next = next.next
-    next = null
+    let next = p.next;
+    p.val = next.val;
+    p.next = next.next;
+    next = null;
   } else if (head === p) {
     // 是头节点
-    head = null
-    p = null
+    head = null;
+    p = null;
   } else {
     // 是多节点链表的尾节点
-    let temp = head
+    let temp = head;
     while (temp.next !== p) {
-      temp = temp.next
+      temp = temp.next;
     }
-    temp.next = p.next
-    p = null
+    temp.next = p.next;
+    p = null;
   }
-  return head
-}
+  return head;
+};
 ```
 
 ### 删除排序链表中的重复元素 II
@@ -78,41 +78,41 @@ const deleteNode = function (head, p) {
 
 ```js
 const deleteDuplicates = function (head) {
-  const guard = new ListNode(-101, head)
-  let pre = guard
-  let p = head
+  const guard = new ListNode(-101, head);
+  let pre = guard;
+  let p = head;
   if (head === null || head.next === null) {
-    return head
+    return head;
   }
   while (p && p.next) {
     // 当前节点和下一个不同，pre后移
     if (p.val !== p.next.val) {
-      pre.next = p
-      pre = p
-      p = p.next
+      pre.next = p;
+      pre = p;
+      p = p.next;
     } else {
       // 当前节点是重复节点
       while (p && p.next && p.val === p.next.val) {
-        p = p.next
+        p = p.next;
         // 尾部节点重复了就应该返回
         if (p.next === null) {
-          pre.next = null
+          pre.next = null;
           // 注意这里应该立刻返回
-          return guard.next
+          return guard.next;
         }
       }
       // 停下来后还要向后移动一个到不重复的节点上
       if (p.next) {
-        p = p.next
+        p = p.next;
       }
     }
   }
   // 结束的时候p是尾部节点且没有重复，区分于尾部节点重复的情况
   if (p.next === null) {
-    pre.next = p
+    pre.next = p;
   }
-  return guard.next
-}
+  return guard.next;
+};
 ```
 
 ### 链表的环的入口节点
@@ -137,26 +137,73 @@ const deleteDuplicates = function (head) {
 ```js
 const detectCycle = (head) => {
   if (head === null) {
-    return null
+    return null;
   }
-  let fast = head
-  let slow = head
-  let p = head
+  let fast = head;
+  let slow = head;
+  let p = head;
   while (fast && fast.next) {
-    fast = fast.next
-    fast = fast.next
-    slow = slow.next
+    fast = fast.next;
+    fast = fast.next;
+    slow = slow.next;
     if (slow === fast) {
-      break
+      break;
     }
   }
   if (!fast || !fast.next) {
-    return null
+    return null;
   }
   while (p !== slow) {
-    p = p.next
-    slow = slow.next
+    p = p.next;
+    slow = slow.next;
   }
-  return slow
-}
+  return slow;
+};
+```
+
+### 两个链表的公共节点
+
+#### 思路
+
+两个链表如果相交，总有一段长度是共有的，相交的节点位于共有长度某个位置。用两个指针，分别计算两个链表的长度。计算差值后，让两个指针从共同长度的起点开始寻找。
+注意两个指针指向的节点的值相同但可以不是同一个节点。
+
+#### 代码
+
+```js
+var getIntersectionNode = function (headA, headB) {
+  if (headA === null || headB === null) {
+    return null;
+  }
+  let pa = headA;
+  let pb = headB;
+  let lenA = 0;
+  let lenB = 0;
+  while (pa) {
+    lenA++;
+    pa = pa.next;
+  }
+  while (pb) {
+    lenB++;
+    pb = pb.next;
+  }
+  pa = headA;
+  pb = headB;
+  while (lenA > lenB) {
+    pa = pa.next;
+    lenA--;
+  }
+  while (lenB > lenA) {
+    pb = pb.next;
+    lenB--;
+  }
+  while (pa && pb) {
+    if (pa === pb) {
+      return pa;
+    }
+    pa = pa.next;
+    pb = pb.next;
+  }
+  return null;
+};
 ```
