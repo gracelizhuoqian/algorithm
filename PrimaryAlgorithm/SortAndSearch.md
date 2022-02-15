@@ -90,39 +90,88 @@ var reversePairs = function (nums) {
   if (nums.length <= 1) {
     return 0;
   }
-  reverseCouple=0;
-  mergeSort(nums,0,nums.length-1);
+  reverseCouple = 0;
+  mergeSort(nums, 0, nums.length - 1);
   return reverseCouple;
 };
-const mergeSort=(nums,start,end)=>{
-  if(start===end){
+const mergeSort = (nums, start, end) => {
+  if (start === end) {
     return [nums[start]];
   }
-  const resArray=[];
-  let mid=Math.floor((start+end)/2);
-  let leftArray=mergeSort(nums,start,mid);
-  let rightArray=mergeSort(nums,mid+1,end);
-  let pl=0;
-  let pr=0;
-  while(pl<=leftArray.length&&pr<=rightArray.length){
-    if(leftArray[pl]<=rightArray[pr]){
+  const resArray = [];
+  let mid = Math.floor((start + end) / 2);
+  let leftArray = mergeSort(nums, start, mid);
+  let rightArray = mergeSort(nums, mid + 1, end);
+  let pl = 0;
+  let pr = 0;
+  while (pl <= leftArray.length && pr <= rightArray.length) {
+    if (leftArray[pl] <= rightArray[pr]) {
       resArray.push(leftArray[pl]);
-      reverseCouple+=pr;
+      reverseCouple += pr;
       pl++;
-    }else{
+    } else {
       resArray.push(leftArray[pr]);
       pr++;
     }
   }
-  while(pl<=leftArray.length){
-      resArray.push(leftArray[pl]);
-      reverseCouple+=pr;
-      pl++;
+  while (pl <= leftArray.length) {
+    resArray.push(leftArray[pl]);
+    reverseCouple += pr;
+    pl++;
   }
-  while(pr<=rightArray.length){
-      resArray.push(leftArray[pr]);
-      pr++;
+  while (pr <= rightArray.length) {
+    resArray.push(leftArray[pr]);
+    pr++;
   }
   return resArray;
-}
+};
+```
+
+### 有排序数组中查找数字
+
+求一个数字在有序数组中出现的次数。
+
+#### 思路
+
+二分查找，先找到最大的比该数字小的数的位置。在找到最小的比该数字大的数字的位置。中间即该数字。
+
+#### 代码
+
+```js
+var search = function (nums, k) {
+  const len = nums.length;
+  let count = 0;
+  if (len === 0) {
+    return count;
+  }
+  let leftIndex = findMaxSmaller(nums, k);
+  let rightIndex = findMinBigger(nums, k);
+  return rightIndex - leftIndex - 1;
+};
+const findMaxSmaller = (nums, k) => {
+  let start = 0;
+  let end = nums.length - 1;
+  while (start <= end) {
+    let mid = Math.floor((start + end) / 2);
+    if (nums[mid] >= k) {
+      end = mid - 1;
+    } else {
+      start = mid + 1;
+    }
+  }
+  return start - 1;
+};
+const findMinBigger = (nums, k) => {
+  let start = 0;
+  let end = nums.length - 1;
+  while (start <= end) {
+    let mid = Math.floor((start + end) / 2);
+    if (nums[mid] > k) {
+      end = mid - 1;
+    } else {
+      start = mid + 1;
+    }
+  }
+  return end + 1;
+};
 ```
