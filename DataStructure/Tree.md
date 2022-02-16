@@ -17,21 +17,21 @@
 const reconstructTree = function (pre, ps, pe, ino, is, ie) {
   // 注意溢出数组
   if (ps > pe || is > ie || pe >= pre.length || ie >= pre.length) {
-    return null
+    return null;
   }
   if (ps === pe && is === ie) {
-    return new TreeNode(pre[ps])
+    return new TreeNode(pre[ps]);
   }
-  let root = new TreeNode(pre[ps])
-  let rootIndexOfIn
+  let root = new TreeNode(pre[ps]);
+  let rootIndexOfIn;
   // 注意这里ie是索引，因此应该有=判断
   for (let i = is; i <= ie; i++) {
     if (ino[i] === root.val) {
-      rootIndexOfIn = i
+      rootIndexOfIn = i;
     }
   }
-  let leftSize = rootIndexOfIn - is
-  let rightSize = ie - rootIndexOfIn
+  let leftSize = rootIndexOfIn - is;
+  let rightSize = ie - rootIndexOfIn;
   root.left = reconstructTree(
     pre,
     ps + 1,
@@ -39,7 +39,7 @@ const reconstructTree = function (pre, ps, pe, ino, is, ie) {
     ino,
     is,
     rootIndexOfIn - 1
-  )
+  );
   root.right = reconstructTree(
     pre,
     pe - rightSize + 1,
@@ -47,13 +47,13 @@ const reconstructTree = function (pre, ps, pe, ino, is, ie) {
     ino,
     rootIndexOfIn + 1,
     ie
-  )
-  return root
-}
+  );
+  return root;
+};
 const buildTree = function (preorder, inorder) {
-  const len = inorder.length
-  return reconstructTree(preorder, 0, len - 1, inorder, 0, len - 1)
-}
+  const len = inorder.length;
+  return reconstructTree(preorder, 0, len - 1, inorder, 0, len - 1);
+};
 ```
 
 ### 数的子结构
@@ -76,41 +76,41 @@ B 是 A 的子结构， 即 A 中有出现和 B 相同的结构和节点值。
 ```js
 const hasSameStructure = function (ra, rb) {
   if (!ra && !rb) {
-    return true
+    return true;
   }
   if (rb && !ra) {
-    return false
+    return false;
   }
   if (!rb && ra) {
-    return true
+    return true;
   }
   if (ra.val === rb.val) {
     return (
       hasSameStructure(ra.left, rb.left) && hasSameStructure(ra.right, rb.right)
-    )
+    );
   } else {
     // 注意这里，不想等应该直接返回false
-    return false
+    return false;
   }
-}
+};
 const isSubStructure = function (A, B) {
-  let res = false
+  let res = false;
   if (!A && B) {
-    return false
+    return false;
   }
   if (!B) {
-    return false
+    return false;
   }
   // 先序遍历
   if (A.val === B.val) {
     // A 是满足条件的根节点
-    res = hasSameStructure(A, B)
+    res = hasSameStructure(A, B);
     if (res) {
-      return true
+      return true;
     }
   }
-  return isSubStructure(A.left, B) || isSubStructure(A.right, B)
-}
+  return isSubStructure(A.left, B) || isSubStructure(A.right, B);
+};
 ```
 
 ### 从上到下打印二叉树 II
@@ -135,38 +135,38 @@ const isSubStructure = function (A, B) {
 
 ```js
 var levelOrder = function (root) {
-  const queue = []
-  const res = []
+  const queue = [];
+  const res = [];
   if (!root) {
-    return res
+    return res;
   }
-  let nextLevel = 0
-  let curRest = 1
-  queue.push(root)
-  let level = 0
+  let nextLevel = 0;
+  let curRest = 1;
+  queue.push(root);
+  let level = 0;
   while (queue.length) {
-    let front = queue.shift()
+    let front = queue.shift();
     if (!res[level]) {
-      res[level] = []
+      res[level] = [];
     }
-    res[level].push(front.val)
-    curRest--
+    res[level].push(front.val);
+    curRest--;
     if (front.left) {
-      queue.push(front.left)
-      nextLevel++
+      queue.push(front.left);
+      nextLevel++;
     }
     if (front.right) {
-      queue.push(front.right)
-      nextLevel++
+      queue.push(front.right);
+      nextLevel++;
     }
     if (curRest === 0) {
-      curRest = nextLevel
-      nextLevel = 0
-      level++
+      curRest = nextLevel;
+      nextLevel = 0;
+      level++;
     }
   }
-  return res
-}
+  return res;
+};
 ```
 
 ### 从上到下打印二叉树 III
@@ -188,43 +188,43 @@ var levelOrder = function (root) {
 var levelOrder = function (root) {
   // 双栈结构
   if (!root) {
-    return []
+    return [];
   }
-  const stack1 = []
-  const stack2 = []
-  const res = []
-  let level = 0
-  stack1.push(root)
+  const stack1 = [];
+  const stack2 = [];
+  const res = [];
+  let level = 0;
+  stack1.push(root);
   while (stack1.length || stack2.length) {
     if (!res[level]) {
-      res[level] = []
+      res[level] = [];
     }
     //  偶数层，往栈2压，从左向右
     while (level % 2 === 0 && stack1.length) {
-      let front = stack1.pop()
-      res[level].push(front.val)
+      let front = stack1.pop();
+      res[level].push(front.val);
       if (front.left) {
-        stack2.push(front.left)
+        stack2.push(front.left);
       }
       if (front.right) {
-        stack2.push(front.right)
+        stack2.push(front.right);
       }
     }
     //  奇数层，往栈1压，从右向左
     while (level % 2 === 1 && stack2.length) {
-      let front = stack2.pop()
-      res[level].push(front.val)
+      let front = stack2.pop();
+      res[level].push(front.val);
       if (front.right) {
-        stack1.push(front.right)
+        stack1.push(front.right);
       }
       if (front.left) {
-        stack1.push(front.left)
+        stack1.push(front.left);
       }
     }
-    level++
+    level++;
   }
-  return res
-}
+  return res;
+};
 ```
 
 ### 二叉树中和为某一值的路径
@@ -234,31 +234,31 @@ var levelOrder = function (root) {
 ```js
 const subPathSum = function (root, path, target, res) {
   if (!root) {
-    return
+    return;
   }
   if (root && !root.left && !root.right && root.val === target) {
-    res.push(path.slice())
+    res.push(path.slice());
   }
   if (root.left) {
-    path.push(root.left.val)
-    subPathSum(root.left, path, target - root.val, res)
+    path.push(root.left.val);
+    subPathSum(root.left, path, target - root.val, res);
   }
   if (root.right) {
-    path.push(root.right.val)
-    subPathSum(root.right, path, target - root.val, res)
+    path.push(root.right.val);
+    subPathSum(root.right, path, target - root.val, res);
   }
   // 访问了当前节点后，把当前节点从路径中去除
-  path.pop()
-}
+  path.pop();
+};
 var pathSum = function (root, target) {
-  const res = []
+  const res = [];
   if (!root) {
-    return []
+    return [];
   }
-  const path = [root.val]
-  subPathSum(root, path, target, res)
-  return res
-}
+  const path = [root.val];
+  subPathSum(root, path, target, res);
+  return res;
+};
 ```
 
 ### 二叉排序树转换有序链表
@@ -272,37 +272,37 @@ var pathSum = function (root, target) {
 #### 实现
 
 ```js
-let maxNode = null
+let maxNode = null;
 const subTreeToDL = function (root) {
   if (!root) {
-    return null
+    return null;
   }
   if (root.left) {
-    subTreeToDL(root.left)
+    subTreeToDL(root.left);
   }
   if (maxNode) {
-    maxNode.right = root
-    root.left = maxNode
+    maxNode.right = root;
+    root.left = maxNode;
   }
-  maxNode = root
+  maxNode = root;
   if (root.right) {
-    subTreeToDL(root.right, maxNode)
+    subTreeToDL(root.right, maxNode);
   }
-}
+};
 var treeToDoublyList = function (root) {
   if (!root) {
-    return null
+    return null;
   }
-  maxNode = null
-  subTreeToDL(root)
-  let minNode = maxNode
+  maxNode = null;
+  subTreeToDL(root);
+  let minNode = maxNode;
   while (minNode && minNode.left) {
-    minNode = minNode.left
+    minNode = minNode.left;
   }
-  minNode.left = maxNode
-  maxNode.right = minNode
-  return minNode
-}
+  minNode.left = maxNode;
+  maxNode.right = minNode;
+  return minNode;
+};
 ```
 
 ### 序列化和反序列化二叉树 \*
@@ -311,63 +311,101 @@ var treeToDoublyList = function (root) {
 
 ```js
 const subSerialize = (r, serialStr) => {
-  const queue = []
-  queue.push(r)
-  serialStr = `${r.val}`
+  const queue = [];
+  queue.push(r);
+  serialStr = `${r.val}`;
   while (queue.length) {
-    let front = queue.shift()
+    let front = queue.shift();
     if (front.left) {
-      serialStr += `,${front.left.val}`
-      queue.push(front.left)
+      serialStr += `,${front.left.val}`;
+      queue.push(front.left);
     } else {
-      serialStr += `,null`
+      serialStr += `,null`;
     }
     if (front.right) {
-      serialStr += `,${front.right.val}`
-      queue.push(front.right)
+      serialStr += `,${front.right.val}`;
+      queue.push(front.right);
     } else {
-      serialStr += `,null`
+      serialStr += `,null`;
     }
   }
-  return serialStr
-}
+  return serialStr;
+};
 const serialize = (root) => {
   if (!root) {
-    return '[]'
+    return "[]";
   }
-  let str = '['
-  str += subSerialize(root)
-  str += ']'
-  return str
-}
+  let str = "[";
+  str += subSerialize(root);
+  str += "]";
+  return str;
+};
 
 // 这里反过来的思路要多多思考
 const deserialize = (str) => {
-  if (str === '[]') {
-    return null
+  if (str === "[]") {
+    return null;
   }
-  const nodeArray = str.slice(1, str.length - 1).split(',')
-  let root = new ListNode(nodeArray[0])
-  const queue = []
-  queue.push(root)
-  let index = 1
+  const nodeArray = str.slice(1, str.length - 1).split(",");
+  let root = new ListNode(nodeArray[0]);
+  const queue = [];
+  queue.push(root);
+  let index = 1;
   while (queue.length) {
-    let front = queue.pop()
-    let left = nodeArray[i++]
-    if (left !== 'null') {
-      front.left = new ListNode(left)
-      queue.push(front.left)
+    let front = queue.pop();
+    let left = nodeArray[i++];
+    if (left !== "null") {
+      front.left = new ListNode(left);
+      queue.push(front.left);
     } else {
-      front.left = null
+      front.left = null;
     }
-    let right = nodeArray[i++]
-    if (right !== 'null') {
-      front.right = new ListNode(right)
-      queue.push(front.right)
+    let right = nodeArray[i++];
+    if (right !== "null") {
+      front.right = new ListNode(right);
+      queue.push(front.right);
     } else {
-      front.right = null
+      front.right = null;
     }
   }
-  return root
-}
+  return root;
+};
+```
+
+### 二叉搜索树的第 K 大节点
+
+#### 思路
+
+二叉搜索树的左子树节点的值都要小于根节点，右子树上的节点的值都要大于根节点。因此采用二叉树的逆中序遍历可以得到递减的结果。找第 K 个节点可以记录当前遍历的节点的个数，达到 K 就不再继续执行。
+
+#### 代码
+
+```js
+const innerKthLargest = function (root, k) {
+  if (!root) {
+    return null;
+  }
+  if (root.right) {
+    let num = innerKthLargest(root.right, k);
+    if (index === k) {
+      return num;
+    }
+  }
+  index++;
+  if (index === k) {
+    return root.val;
+  }
+  if (root.left) {
+    let num = innerKthLargest(root.left, k);
+    if (index === k) {
+      return num;
+    }
+  }
+};
+let index = 0;
+var kthLargest = function (root, k) {
+  // 注意对index的初始化
+  index = 0;
+  return innerKthLargest(root, k);
+};
 ```
