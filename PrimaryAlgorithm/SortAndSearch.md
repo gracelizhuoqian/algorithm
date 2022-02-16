@@ -175,3 +175,38 @@ const findMinBigger = (nums, k) => {
   return end + 1;
 };
 ```
+
+### 0~n-1 中缺失的数字
+
+#### 思路
+
+二分区间查找：如果当前[0,n]区间不缺少数字，那么任意一个位置 i 上有 nums[i]=i。如果该区间缺少数字则会导致 nums[i]>i。
+
+#### 代码
+
+```js
+// 根据求和来找
+var missingNumber = function (nums) {
+  let len = nums.length;
+  let sum = ((1 + len) * len) / 2;
+  for (let i = 0; i < len; i++) {
+    sum -= nums[i];
+  }
+  return sum;
+};
+// 二分 永远都必须是start=mid+1，end=mid-1，否则会死循环，只有判断条件会改变！！！
+var missingNumber = function (nums) {
+  let start = 0;
+  let end = nums.length - 1;
+  while (start <= end) {
+    let mid = Math.floor((start + end) / 2);
+    if (nums[mid] === mid) {
+      start = mid + 1;
+    }
+    if (nums[mid] > mid) {
+      end = mid - 1;
+    }
+  }
+  return end + 1;
+};
+```
