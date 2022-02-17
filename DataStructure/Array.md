@@ -18,16 +18,16 @@
 
 ```js
 function findDuplicate(arr) {
-  const len = arr.length
+  const len = arr.length;
   if (!len) {
-    return null
+    return null;
   }
   arr.sort((a, b) => {
-    return a - b
-  })
+    return a - b;
+  });
   for (let i = 1; i < len; i++) {
     if (arr[i] === arr[i - 1]) {
-      return arr[i]
+      return arr[i];
     }
   }
 }
@@ -39,16 +39,16 @@ function findDuplicate(arr) {
 
 ```js
 function findDuplicate(arr) {
-  const hash = {}
-  const len = arr.length
+  const hash = {};
+  const len = arr.length;
   for (let i = 0; i < len; i++) {
     if (hash[arr[i]] === undefined) {
-      hash[arr[i]] = 1
+      hash[arr[i]] = 1;
     } else {
-      return arr[i]
+      return arr[i];
     }
   }
-  return null
+  return null;
 }
 ```
 
@@ -62,28 +62,28 @@ function findDuplicate(arr) {
 
 ```js
 function findDuplicate(arr, k) {
-  const hash = {}
-  const len = arr.length
+  const hash = {};
+  const len = arr.length;
   for (let i = 0; i < len; i++) {
     if (hash[arr[i]] === undefined) {
-      hash[arr[i]] = [i]
+      hash[arr[i]] = [i];
     } else {
-      hash[arr[i]].push(i)
+      hash[arr[i]].push(i);
     }
   }
-  let res = false
+  let res = false;
   // 注意forEach的返回不是函数的返回
   Object.keys(hash).forEach((num) => {
-    let len = hash[num].length
+    let len = hash[num].length;
     if (len > 1) {
       for (let i = 1; i < len; i++) {
         if (hash[num][i] - hash[num][i - 1] <= k) {
-          res = true
+          res = true;
         }
       }
     }
-  })
-  return res
+  });
+  return res;
 }
 ```
 
@@ -96,24 +96,24 @@ function findDuplicate(arr, k) {
 
 ```js
 function findDuplicate(arr) {
-  const len = arr.length
+  const len = arr.length;
   for (let i = 0; i < len; i++) {
     if (arr[i] !== i) {
       // 当前数字和索引不等，找到它本来应该的位置arr[i]
-      let temp = arr[arr[i]]
+      let temp = arr[arr[i]];
       // 本来的位置的数字和位置对应，说明重复了
       if (temp === arr[i]) {
-        return arr[i]
+        return arr[i];
       } else {
         // 否则交换当前数字到正确的位置
-        arr[arr[i]] = arr[i]
-        arr[i] = temp
+        arr[arr[i]] = arr[i];
+        arr[i] = temp;
         // 需要重新审视当前位置
-        i--
+        i--;
       }
     }
   }
-  return null
+  return null;
 }
 ```
 
@@ -136,25 +136,25 @@ function findDuplicate(arr) {
 
 ```js
 const getCount = (nums, start, end) => {
-  return nums.filter((i) => start <= i && end >= i).length
-}
+  return nums.filter((i) => start <= i && end >= i).length;
+};
 const findDuplicate = (nums) => {
-  const len = nums.length
-  let mid = null
-  let start = 1
-  let end = len - 1
+  const len = nums.length;
+  let mid = null;
+  let start = 1;
+  let end = len - 1;
   while (start < end) {
-    mid = Math.floor((start + end) / 2)
-    let leftCount = getCount(nums, start, mid)
+    mid = Math.floor((start + end) / 2);
+    let leftCount = getCount(nums, start, mid);
     if (leftCount > mid - start + 1) {
-      end = mid
+      end = mid;
     } else {
       // 务必注意二分查找时的几个范围，包括加不加等号，这里是`mid+1`而不是`mid`，否则会死循环
-      start = mid + 1
+      start = mid + 1;
     }
   }
-  return start
-}
+  return start;
+};
 ```
 
 ### 删除有序数组中的重复项
@@ -174,21 +174,21 @@ const findDuplicate = (nums) => {
 
 ```js
 const deleteRepeatNumber = (nums) => {
-  const len = nums.length
+  const len = nums.length;
   if (len <= 1) {
-    return len
+    return len;
   }
-  let p = 1
+  let p = 1;
   // nums.length会动态变化
   while (p < nums.length) {
     if (nums[p] === nums[p - 1]) {
-      nums.splice(p, 1)
+      nums.splice(p, 1);
     } else {
-      p++
+      p++;
     }
   }
-  return nums.length
-}
+  return nums.length;
+};
 ```
 
 #### 解法 2:双指针
@@ -197,21 +197,21 @@ const deleteRepeatNumber = (nums) => {
 
 ```js
 const deleteRepeatNumber = (nums) => {
-  const len = nums.length
-  let slow = 0
-  let fast = 1
+  const len = nums.length;
+  let slow = 0;
+  let fast = 1;
   while (fast < len) {
     if (nums[slow] !== nums[fast]) {
       //fast指向了新的不同元素
-      slow++
-      nums[slow] = nums[fast]
+      slow++;
+      nums[slow] = nums[fast];
     }
     // 无论fast是不是要更新的元素，都要向后移动
-    fast++
+    fast++;
   }
   // slow是最后一个元素的索引，长度要加1
-  return slow + 1
-}
+  return slow + 1;
+};
 ```
 
 ### 删除有序数组中的重复项 II
@@ -232,30 +232,30 @@ const deleteRepeatNumber = (nums) => {
 
 ```js
 const deleteRepeatNumber = (nums) => {
-  const len = nums.length
+  const len = nums.length;
   if (len <= 2) {
-    return len
+    return len;
   }
-  let hasOneRepeat = false
-  let p = 1
+  let hasOneRepeat = false;
+  let p = 1;
   // 判断条件这里务必注意，随着splice操作，数组长度会更改
   while (p < nums.length) {
     if (nums[p] !== nums[p - 1]) {
-      hasOneRepeat = false
-      p++
+      hasOneRepeat = false;
+      p++;
     } else {
       if (!hasOneRepeat) {
         // 第一次重复
-        hasOneRepeat = true
-        p++
+        hasOneRepeat = true;
+        p++;
       } else {
         // 不是第一次重复了
-        nums.splice(p, 1)
+        nums.splice(p, 1);
       }
     }
   }
-  return nums.length
-}
+  return nums.length;
+};
 ```
 
 #### 2.双指针
@@ -264,104 +264,107 @@ const deleteRepeatNumber = (nums) => {
 
 ```js
 const deleteRepeatNumber = (nums) => {
-  const len = nums.length
+  const len = nums.length;
   if (len <= 2) {
-    return len
+    return len;
   }
-  let slow = 0
-  let fast = 1
+  let slow = 0;
+  let fast = 1;
   // 注意这里，需要让fast指向第一个不同的元素
   while (fast < len && nums[fast] === nums[slow]) {
-    fast++
+    fast++;
   }
   // 如果第一个元素就有重复，需要slow后移
   if (fast > 1) {
-    slow++
-    nums[slow] = nums[slow - 1]
+    slow++;
+    nums[slow] = nums[slow - 1];
   }
   while (fast < len) {
     if (nums[fast] !== nums[slow]) {
-      slow++
-      nums[slow] = nums[fast]
+      slow++;
+      nums[slow] = nums[fast];
       if (fast < len - 1 && nums[fast] === nums[fast + 1]) {
-        slow++
-        nums[slow] = nums[slow - 1]
-        fast++
+        slow++;
+        nums[slow] = nums[slow - 1];
+        fast++;
       }
     }
-    fast++
+    fast++;
   }
-  return slow + 1
-}
+  return slow + 1;
+};
 ```
 
-
 ### 数组中超过一半的数字
+
 **_（offer 39）/(LeetCode 169)_**
 
 首先要确认是否允许修改数组。另外要考虑输入的特殊情况，比如空数组，和不存在该数字的数组。
-#### 1.**相同加，不同减**
-每出现一次该数字，该数字出现次数加1，不是该数字就减1。减到0就换数字。该数字超过一半的话，最终次数是正的。
 
+#### 1.**相同加，不同减**
+
+每出现一次该数字，该数字出现次数加 1，不是该数字就减 1。减到 0 就换数字。该数字超过一半的话，最终次数是正的。
 
 ```js
-const majorityElement=(numArray)=>{
-  let len=numArray.length;
-  let count=1;
-  let cur=numArray[0];
-  for(let i=1;i<len;i++){
-    if(count===0){
-      cur=numArray[i];
+const majorityElement = (numArray) => {
+  let len = numArray.length;
+  let count = 1;
+  let cur = numArray[0];
+  for (let i = 1; i < len; i++) {
+    if (count === 0) {
+      cur = numArray[i];
       count++;
-    }else{
-      if(numArray[i]===cur){
+    } else {
+      if (numArray[i] === cur) {
         count++;
-      }else{
+      } else {
         count--;
       }
     }
   }
   return cur;
-}
+};
 ```
-#### 寻找第 k 大的数（partition方法）
+
+#### 寻找第 k 大的数（partition 方法）
 
 当数组排序后，如果存在这种数字，那么它一定是位于中间的数字，也即我们要找到第`n/2`大的数字；可以用快排的思路，任意找到数字`x`，经过 `partition`处理后，位置是 `p`，如果 `p < n/2`，则要找的数字在右边，否则在左边的数字，在缩小范围的数组中递归寻找即可。
 这个的时间复杂度是`O(n)`，因为`O(N+N/2+N/4+...)=O(N)`。
+
 ```js
-const findKth=(arr,k,start=0,end=arr.length-1)=>{
-  let len=arr.length;
-  if(len<k||k<0){
+const findKth = (arr, k, start = 0, end = arr.length - 1) => {
+  let len = arr.length;
+  if (len < k || k < 0) {
     return false;
   }
-  let pStart=start;
-  let pEnd=end;
-  let cur=arr[start];
-  while(start<=end){
+  let pStart = start;
+  let pEnd = end;
+  let cur = arr[start];
+  while (start <= end) {
     // 找左边第一个比cur大的
-    while(start<=end&&arr[start]<=cur){
+    while (start <= end && arr[start] <= cur) {
       start++;
     }
     // 找右边第一个比cur小的
-    while(start<=end&&arr[end]>=cur){
+    while (start <= end && arr[end] >= cur) {
       end--;
     }
-    if(start<=end){
-      let temp=arr[start];
-      arr[start]=arr[end];
-      arr[end]=temp;
+    if (start <= end) {
+      let temp = arr[start];
+      arr[start] = arr[end];
+      arr[end] = temp;
     }
   }
-  arr[pStart]=arr[end];
-  arr[end]=cur;
-  if(end===k){
+  arr[pStart] = arr[end];
+  arr[end] = cur;
+  if (end === k) {
     return cur;
-  }else if(end<k){
-    return findKth(arr,k,end+1,pEnd);
-  }else{
-    return findKth(arr,k,pStart,end-1);
+  } else if (end < k) {
+    return findKth(arr, k, end + 1, pEnd);
+  } else {
+    return findKth(arr, k, pStart, end - 1);
   }
-}
+};
 ```
 
 ## 二维数组
@@ -394,76 +397,76 @@ var searchBinary = function (
   colStart,
   colEnd
 ) {
-  let r = matrix.length
-  let c = matrix[0].length
+  let r = matrix.length;
+  let c = matrix[0].length;
   // 超出范围
   if (rowStart < 0 || rowEnd >= r || colStart < 0 || colEnd >= c) {
-    return false
+    return false;
   }
   // 直接等于左上角的最小值（右下角的最大值）
   if (
     matrix[rowStart][colStart] === target ||
     matrix[rowEnd][colEnd] === target
   ) {
-    return true
+    return true;
     // 不在[min,max]中
   } else if (
     matrix[rowStart][colStart] > target ||
     matrix[rowEnd][colEnd] < target
   ) {
-    return false
+    return false;
   } else {
     // 在(min,max)范围内
     // 子数组变成了一维数组，直接换成普通的二分查找
     if (rowStart === rowEnd) {
-      let i = colStart
-      let j = colEnd
+      let i = colStart;
+      let j = colEnd;
       while (i <= j && i >= 0 && j >= 0 && i <= colEnd && j <= colEnd) {
-        let mid = Math.floor((i + j) / 2)
+        let mid = Math.floor((i + j) / 2);
         if (matrix[rowStart][mid] === target) {
-          return true
+          return true;
         } else if (matrix[rowStart][mid] > target) {
-          j = mid - 1
+          j = mid - 1;
         } else {
-          i = mid + 1
+          i = mid + 1;
         }
       }
-      return false
+      return false;
     }
     if (colStart === colEnd) {
-      let i = rowStart
-      let j = rowEnd
+      let i = rowStart;
+      let j = rowEnd;
       while (i <= j && i >= 0 && j >= 0 && i <= rowEnd && j <= rowEnd) {
-        let mid = Math.floor((i + j) / 2)
+        let mid = Math.floor((i + j) / 2);
         if (matrix[mid][colStart] === target) {
-          return true
+          return true;
         } else if (matrix[mid][colStart] > target) {
-          j = mid - 1
+          j = mid - 1;
         } else {
-          i = mid + 1
+          i = mid + 1;
         }
       }
-      return false
+      return false;
     }
     // 递归查找四个子数组
     if (rowStart !== rowEnd && colStart !== colEnd) {
-      let rowMid = Math.floor((rowStart + rowEnd) / 2)
-      let colMid = Math.floor((colStart + colEnd) / 2)
+      let rowMid = Math.floor((rowStart + rowEnd) / 2);
+      let colMid = Math.floor((colStart + colEnd) / 2);
       return (
         searchBinary(matrix, target, rowStart, rowMid, colStart, colMid) ||
         searchBinary(matrix, target, rowStart, rowMid, colMid + 1, colEnd) ||
         searchBinary(matrix, target, rowMid + 1, rowEnd, colStart, colMid) ||
         searchBinary(matrix, target, rowMid + 1, rowEnd, colMid + 1, colEnd)
-      )
+      );
     }
   }
   // return false
-}
+};
 var searchMatrix = function (matrix, target) {
-  let rows = matrix.length
-  let cols = matrix[0].length
-  return searchBinary(matrix, target, 0, rows - 1, 0, cols - 1)
-}
+  let rows = matrix.length;
+  let cols = matrix[0].length;
+  return searchBinary(matrix, target, 0, rows - 1, 0, cols - 1);
+};
 ```
 
 #### 解法 2.渐进筛选
@@ -474,22 +477,127 @@ var searchMatrix = function (matrix, target) {
 ```js
 // 存储下当前所在筛选数组的右上角的位置
 const searchMatrix = function (matrix, target) {
-  const rows = matrix.length
-  const cols = matrix[0].length
-  let row = 0
-  let col = cols - 1
+  const rows = matrix.length;
+  const cols = matrix[0].length;
+  let row = 0;
+  let col = cols - 1;
   while (row < rows && col >= 0) {
     if (matrix[row][col] === target) {
-      return true
+      return true;
     } else if (matrix[row][col] < target) {
       // 排除所在行
-      row++
+      row++;
     } else {
       // 排除所在列
-      col--
+      col--;
     }
   }
-  return false
-}
+  return false;
+};
 ```
 
+### 和为 s 的数字
+
+#### 思路
+
+双指针
+
+#### 代码
+
+```js
+var twoSum = function (nums, target) {
+  const len = nums.length;
+  if (len < 2) {
+    return null;
+  }
+  let start = 0;
+  let end = len - 1;
+  while (start < end) {
+    if (nums[start] + nums[end] === target) {
+      return [nums[start], nums[end]];
+    }
+    if (nums[start] + nums[end] < target) {
+      start++;
+    }
+    if (nums[start] + nums[end] > target) {
+      end--;
+    }
+  }
+  return null;
+};
+```
+
+### 和为 s 的连续正数序列
+
+输入一个正整数 target ，输出所有和为 target 的连续正整数序列（至少含有两个数）。
+
+序列内的数字由小到大排列，不同序列按照首个数字从小到大排列。
+
+示例 1：
+
+输入：target = 9
+输出：[[2,3,4],[4,5]]
+示例 2：
+
+输入：target = 15
+输出：[[1,2,3,4,5],[4,5,6],[7,8]]
+
+限制：
+
+1 <= target <= 10^5
+
+#### 思路
+
+m 表示子序列中数字的个数，n 表示子序列的中位数。必须满足
+
+1. m\*n===s
+2. n>=m/2
+
+#### 代码
+
+```js
+var isInteger = function (num) {
+  return (num | 0) === num;
+};
+var findContinuousSequence = function (target) {
+  let m,n;
+  if (target % 2 === 1) {
+    m = 2;
+    n = target / 2;
+  } else {
+    m = 3;
+    n = target / 3;
+  }
+  if (target <= 1) {
+    return [];
+  }
+  const sequence = [];
+  let temp = [];
+  while (m / 2 <= n) {
+    // 奇数个数字，中位数必须为整数
+    if (m % 2 === 1) {
+      if (isInteger(n)) {
+        let gap = Math.floor(m / 2);
+        for (let i = -gap; i <= gap; i++) {
+          temp.push(n + i);
+        }
+      }
+    } else {
+      // 偶数的话，必须本身不是整数，但*2是整数
+      if (isInteger(n * 2)&&!isInteger(n)) {
+        let gap = m / 2;
+        for (let i = -gap + 1; i <= gap; i++) {
+          temp.push(Math.floor(n + i));
+        }
+      }
+    }
+    if (temp.length) {
+      sequence.push(temp);
+    }
+    temp = [];
+    m++;
+    n = target / m;
+  }
+  return sequence.reverse();
+};
+```
