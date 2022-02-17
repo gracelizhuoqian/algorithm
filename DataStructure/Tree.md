@@ -409,3 +409,90 @@ var kthLargest = function (root, k) {
   return innerKthLargest(root, k);
 };
 ```
+
+### 二叉树的深度
+
+#### 思路
+
+1. 层序遍历，一个指针 p1 指向当前层的最后一个节点，一个指针 p2 指向下一层的最后一个节点。遍历到 p1 的时候，意味着当前层已经遍历完，层数加一，p1=p2，p2 随着子节点进入队列而移动。
+2. 后序遍历，递归左右子树的深度，取最大值
+
+#### 代码
+
+```js
+// 层序遍历
+var maxDepth = function (root) {
+  if (!root) {
+    return 0;
+  }
+  const head = root;
+  const queue = [head];
+  let p1 = head;
+  let p2 = head;
+  let level = 0;
+  while (queue.length) {
+    let cur = queue.shift();
+    if (cur.left) {
+      queue.push(cur.left);
+      p2 = cur.left;
+    }
+    if (cur.right) {
+      queue.push(cur.right);
+      p2 = cur.right;
+    }
+    if (cur === p1) {
+      level++;
+      p1 = p2;
+    }
+  }
+  return level;
+};
+// 后序遍历
+var maxDepth = function (root) {
+  if (!root) {
+    return 0;
+  }
+  let leftDepth = maxDepth(root.left);
+  let rightDepth = maxDepth(root.right);
+  return Math.max(leftDepth, rightDepth) + 1;
+};
+```
+
+### 平衡二叉树
+
+#### 思路
+
+后序遍历，一个变量，如果该节点作为根节点的子树是平衡的话该变量记录当前节点的树的深度，否则用-1 表示该子节点作为根节点的子树不是平衡树。
+
+#### 代码
+
+```js
+var isBalanced = function (root) {
+  if (!root) {
+    return true;
+  }
+  if (maxDepth(root) > 0) {
+    return true;
+  } else {
+    return false;
+  }
+};
+var maxDepth = function (root) {
+  if (!root) {
+    return 0;
+  }
+  let leftDepth = maxDepth(root.left);
+  if(leftDepth===-1){
+    return -1;
+  }
+  let rightDepth = maxDepth(root.right);
+  if(rightDepth===-1){
+    return -1;
+  }
+  if (Math.abs(leftDepth - rightDepth) <= 1) {
+    return Math.max(leftDepth, rightDepth) + 1;
+  } else {
+    return -1;
+  }
+};
+```

@@ -17,13 +17,13 @@
 
 ```js
 const transToBinary = (num) => {
-  let res = 0
+  let res = 0;
   while (num) {
-    res += num % 2
-    num = Math.floor(num / 2)
+    res += num % 2;
+    num = Math.floor(num / 2);
   }
-  return res
-}
+  return res;
+};
 ```
 
 #### 优化
@@ -35,13 +35,13 @@ const transToBinary = (num) => {
 
 ```js
 const transToBinary = (num) => {
-  let res = 0
+  let res = 0;
   while (num) {
-    res += num & 1
-    num = num >> 1
+    res += num & 1;
+    num = num >> 1;
   }
-  return res
-}
+  return res;
+};
 ```
 
 缺点： 如果输入一个负数，由于右移操作会连着符号一同复制，所以最终会形成 OxFFFF 死循环。
@@ -52,11 +52,119 @@ const transToBinary = (num) => {
 
 ```js
 const countOne = (num) => {
-  let count = 0
+  let count = 0;
   while (num) {
-    count++
-    num = num & (num - 1)
+    count++;
+    num = num & (num - 1);
   }
-  return count
-}
+  return count;
+};
+```
+
+### 数组中只出现过一次的数字
+
+一个整型数组 nums 里除两个数字之外，其他数字都出现了两次。请写程序找出这两个只出现一次的数字。要求时间复杂度是 O(n)，空间复杂度是 O(1)。
+
+示例 1：
+
+输入：nums = [4,1,4,6]
+输出：[1,6] 或 [6,1]
+示例 2：
+
+输入：nums = [1,2,10,4,1,4,3,3]
+输出：[2,10] 或 [10,2]
+限制：
+
+#### 思路
+
+想到这种重复出现的数字会用到异或，但是两个数字需要怎么解决。妙处在于分成两组：
+
+1. 两个只出现一次的数字分别在两个组
+2. 相同的数字在同一组
+
+#### 代码
+
+```js
+var singleNumbers = function (nums) {
+  // 假设两个数字分别是a，b，所有数字异或后得到a和b的异或xor
+  const len = nums.length;
+  let xor = 0;
+  const xor0 = [];
+  const xor1 = [];
+  let res1 = 0,
+    res2 = 0;
+  for (let i = 0; i < len; i++) {
+    xor ^= nums[i];
+  }
+  let bitTarget = 1;
+  let p = xor;
+  // 找到xor的二进制表达里面第一个为1的位置
+  while (p) {
+    let modValue = p % 2;
+    if (modValue === 1) {
+      break;
+    } else {
+      p = p / 2;
+    }
+    bitTarget <<= 1;
+  }
+  // 参与异或的值
+  for (let i = 0; i < nums.length; i++) {
+    // 这里注意符号优先级
+    if ((nums[i] & bitTarget) === 0) {
+      xor0.push(nums[i]);
+    } else {
+      xor1.push(nums[i]);
+    }
+  }
+  for (let i = 0; i < xor1.length; i++) {
+    res1 ^= xor1[i];
+  }
+  for (let i = 0; i < xor0.length; i++) {
+    res2 ^= xor0[i];
+  }
+  return [res1, res2];
+};
+```
+
+### 数组中数字出现的次数 II
+
+在一个数组 nums 中只有一个数字只出现了一次，其他数字都出现了三次，找出只出现一次的数字。
+
+#### 思路
+
+所有数字都出现三次的话，他们的二进制展开后，任意一个位置的二进制表示的和一定是 3 的倍数。某位置上对 3 取模，如果结果是 0，说明该只出现一次的数字该位置是 0，否则是 1。
+
+#### 代码
+
+```js
+var findSingleNumber = function (nums) {
+  const len = nums.length;
+  if (len === 0) {
+    return null;
+  }
+  if (len === 1) {
+    return nums[0];
+  }
+  const bitCache = [];
+  for (let i = 0; i < len; i++) {
+    let cur = nums[i];
+    let index = 0;
+    while (cur) {
+      if (bitCache[index] === undefined) {
+        bitCache[index] = 0;
+      }
+      bitCache[index] += cur % 2;
+      cur = Math.floor(cur / 2);
+      index++;
+    }
+  }
+  const bitLen = bitCache.length;
+  let singleNum = 0;
+  for (let i = bitLen - 1; i >= 0; i--) {
+    let mod = bitCache[i] % 3;
+    singleNum = (singleNum << 1) + mod;
+  }
+  return singleNum;
+};
 ```
