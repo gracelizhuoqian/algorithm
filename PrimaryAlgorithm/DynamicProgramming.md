@@ -428,19 +428,102 @@ var nthUglyNumber = function (n) {
   let p2 = 1;
   let p3 = 1;
   let p5 = 1;
-  const dp=[0,1];
-  for(let i=2;i<=n;i++){
-    dp[i]=Math.min(dp[p2]*2,dp[p3]*3,dp[p5]*5);
-    if(dp[i]===dp[p2]*2){
+  const dp = [0, 1];
+  for (let i = 2; i <= n; i++) {
+    dp[i] = Math.min(dp[p2] * 2, dp[p3] * 3, dp[p5] * 5);
+    if (dp[i] === dp[p2] * 2) {
       p2++;
     }
-    if(dp[i]===dp[p3]*3){
+    if (dp[i] === dp[p3] * 3) {
       p3++;
     }
-    if(dp[i]===dp[p5]*5){
+    if (dp[i] === dp[p5] * 5) {
       p5++;
     }
   }
   return dp[n];
+};
+```
+
+### n 个骰子的点数
+
+把 n 个骰子扔在地上，所有骰子朝上一面的点数之和为 s。输入 n，打印出 s 的所有可能的值出现的概率。
+
+你需要用一个浮点数数组返回答案，其中第 i 个元素代表这 n 个骰子所能掷出的点数集合中第 i 小的那个的概率。
+
+#### 思路
+
+`f(n,x)=求和f(n-i,x-i)，i=1~6`，顺序求可以避免边界溢出问题
+
+#### 代码
+
+```js
+var dicesProbability = function (n) {
+  let pre = [];
+  let cur = [];
+  let index = 2;
+  for (let i = 1; i <= 6; i++) {
+    pre[i] = 1;
+  }
+  while (index <= n) {
+    for (let i = index - 1; i < pre.length; i++) {
+      // 当前层任意元素 pre[i]
+      for (let j = 1; j <= 6; j++) {
+        cur[i + j] = cur[i + j] === undefined ? 1 : cur[i + j] + 1;
+      }
+    }
+    pre = cur;
+    cur = [];
+    index++;
+  }
+  pre.forEach((t) => {
+    if (t) {
+      cur.push(parseFloat((t / Math.pow(6, n)).toFixed(5)));
+    }
+  });
+  return cur;
+};
+```
+
+### 股票的最大利润
+
+**_ 剑指 Offer 63. _**
+假设把某股票的价格按照时间先后顺序存储在数组中，请问买卖该股票一次可能获得的最大利润是多少？
+
+示例 1:
+
+输入: [7,1,5,3,6,4]
+输出: 5
+解释: 在第 2 天（股票价格 = 1）的时候买入，在第 5 天（股票价格 = 6）的时候卖出，最大利润 = 6-1 = 5 。
+注意利润不能是 7-1 = 6, 因为卖出价格需要大于买入价格。
+示例 2:
+
+输入: [7,6,4,3,1]
+输出: 0
+解释: 在这种情况下, 没有交易完成, 所以最大利润为 0。
+
+#### 思路
+
+假设当前是第 i 天，用变量`minValue`记录当前最小值，记录当前最大利润`p[i]=num[i]-minValue`，用最大值减去最小值即可。
+
+#### 代码
+
+```js
+var maxProfit = function (prices) {
+  const len = prices.length;
+  if (len <= 1) {
+    return 0;
+  }
+  let minValue = prices[0];
+  let maxProfit = 0;
+  for (let i = 1; i < len; i++) {
+    if (prices[i] - minValue > maxProfit) {
+      maxProfit = prices[i] - minValue;
+    }
+    if (prices[i] < minValue) {
+      minValue = prices[i];
+    }
+  }
+  return maxProfit;
 };
 ```

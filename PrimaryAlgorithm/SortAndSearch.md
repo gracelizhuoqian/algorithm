@@ -210,3 +210,42 @@ var missingNumber = function (nums) {
   return end + 1;
 };
 ```
+
+### 扑克牌中的顺子
+
+#### 思路
+
+如果数组中不包括 0，那么组成顺子的 5 个数字只要满足如下要求：
+
+1. 不重复
+2. 最大值最小值相差 4  
+   如果包括 n 个 0，那么剩余的数字需要满足：
+3. 不重复
+4. 最大最小值(不包括 0 的！！！)相差[4-n,4]
+
+#### 代码
+
+```js
+var isStraight = function (nums) {
+  const pokes = [];
+  for (let i = 0; i <= 13; i++) {
+    pokes[i] = 0;
+  }
+  let min = 13;
+  let max = 0;
+  for (let i = 0; i < 5; i++) {
+    if (pokes[nums[i]] > 0 && nums[i] !== 0) {
+      return false;
+    } else {
+      pokes[nums[i]]++;
+      if (nums[i] > max) {
+        max = nums[i];
+      }
+      if (nums[i] < min && nums[i] !== 0) {
+        min = nums[i];
+      }
+    }
+  }
+  return max - min >= 4 - pokes[0] && max - min <= 4;
+};
+```
