@@ -542,3 +542,62 @@ var lowestCommonAncestor = function (root, p, q) {
   }
 };
 ```
+
+### 二叉搜索树的最近公共祖先
+
+**_ 剑指 Offer 68 - II. _**
+
+#### 思路
+
+把路径求出来，最近的节点是路径上最后一个值相等的节点。
+
+#### 代码
+
+```js
+/**
+ * @param {TreeNode} root
+ * @param {TreeNode} p
+ * @param {TreeNode} q
+ * @return {TreeNode}
+ */
+var findNode = function (root, p, path) {
+  if (!root) {
+    return false;
+  }
+  if (root.val === p.val) {
+    path.push(root);
+    return true;
+  }
+  path.push(root);
+  if (findNode(root.left, p, path) || findNode(root.right, p, path)) {
+    return true;
+  } else {
+    path.pop();
+    return false;
+  }
+};
+var lowestCommonAncestor = function (root, p, q) {
+  if (!root) {
+    return null;
+  }
+  const pathP = [];
+  const pathQ = [];
+  findNode(root, p, pathP);
+  findNode(root, q, pathQ);
+  let index = 1;
+  let target = root;
+  while (
+    index < pathP.length &&
+    index < pathQ.length &&
+    pathQ[index].val === pathP[index].val
+  ) {
+    if (target.left === pathQ[index]) {
+      target = target.left;
+    } else {
+      target = target.right;
+    }
+    index++;
+  }
+  return target;
+};
+```
