@@ -482,17 +482,63 @@ var maxDepth = function (root) {
     return 0;
   }
   let leftDepth = maxDepth(root.left);
-  if(leftDepth===-1){
+  if (leftDepth === -1) {
     return -1;
   }
   let rightDepth = maxDepth(root.right);
-  if(rightDepth===-1){
+  if (rightDepth === -1) {
     return -1;
   }
   if (Math.abs(leftDepth - rightDepth) <= 1) {
     return Math.max(leftDepth, rightDepth) + 1;
   } else {
     return -1;
+  }
+};
+```
+
+### 二叉搜索树的最近公共祖先
+
+**_ 剑指 Offer 68 - I. _**
+
+#### 思路
+
+当前节点 r，目标节点 p1，p2，三种情况
+
+1. `p1<r && p2<r`或者`p1>r && p2>r`则公共节点在 r 的左子树或者右子树
+2. `p1==r||p2==r` 则公共节点为当前相等的 p1(p2)
+3. `p1<r&&r<p2`，公共节点为 r
+
+#### 代码
+
+```js
+/**
+ * @param {TreeNode} root
+ * @param {TreeNode} p
+ * @param {TreeNode} q
+ * @return {TreeNode}
+ */
+var lowestCommonAncestor = function (root, p, q) {
+  if (!root) {
+    return null;
+  }
+  if (root.val < p.val && root.val < q.val) {
+    return lowestCommonAncestor(root.right, p, q);
+  }
+  if (root.val > p.val && root.val > q.val) {
+    return lowestCommonAncestor(root.left, p, q);
+  }
+  if (root.val === p.val) {
+    return p;
+  }
+  if (root.val === q.val) {
+    return q;
+  }
+  if (
+    (p.val < root.val && root.val < q.val) ||
+    (q.val < root.val && root.val < p.val)
+  ) {
+    return root;
   }
 };
 ```
