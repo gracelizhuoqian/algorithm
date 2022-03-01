@@ -560,7 +560,7 @@ var isInteger = function (num) {
   return (num | 0) === num;
 };
 var findContinuousSequence = function (target) {
-  let m,n;
+  let m, n;
   if (target % 2 === 1) {
     m = 2;
     n = target / 2;
@@ -584,7 +584,7 @@ var findContinuousSequence = function (target) {
       }
     } else {
       // 偶数的话，必须本身不是整数，但*2是整数
-      if (isInteger(n * 2)&&!isInteger(n)) {
+      if (isInteger(n * 2) && !isInteger(n)) {
         let gap = m / 2;
         for (let i = -gap + 1; i <= gap; i++) {
           temp.push(Math.floor(n + i));
@@ -599,5 +599,70 @@ var findContinuousSequence = function (target) {
     n = target / m;
   }
   return sequence.reverse();
+};
+```
+
+### 一次编辑
+
+**_ 面试题 01.05. _**
+字符串有三种编辑操作:插入一个字符、删除一个字符或者替换一个字符。 给定两个字符串，编写一个函数判定它们是否只需要一次(或者零次)编辑。
+
+示例  1:
+
+输入:
+first = "pale"
+second = "ple"
+输出: True
+
+示例  2:
+
+输入:
+first = "pales"
+second = "pal"
+输出: False
+
+#### 思路
+
+三种情况：
+
+1. 两者长度相等，需要替换或者无操作
+2. 两种相差 1，需要长的删掉一个（等价于短的增加一个）
+   其他情况不满足要求
+
+#### 代码
+
+```js
+var oneEditAway = function (first, second) {
+  const len1 = first.length;
+  const len2 = second.length;
+  if (Math.abs(len1 - len2) > 1) {
+    return false;
+  }
+  if (len1 > len2) {
+    let temp = first;
+    first = second;
+    second = temp;
+  }
+  let p = 0;
+  let q = 0;
+  let change = 0;
+  while (p < first.length && q < second.length) {
+    if (first[p] !== second[q]) {
+      if (len1 === len2) {
+        p++;
+        q++;
+      } else {
+        q++;
+      }
+      change++;
+      if (change > 1) {
+        return false;
+      }
+    } else {
+      p++;
+      q++;
+    }
+  }
+  return true;
 };
 ```
