@@ -666,3 +666,65 @@ var oneEditAway = function (first, second) {
   return true;
 };
 ```
+
+### 旋转数组
+
+```js
+var rotate = function (matrix) {
+  const result = [];
+  const n = matrix.length;
+  if (n === 0) {
+    return result;
+  }
+  for (let i = 0; i < n; i++) {
+    result[i] = [];
+  }
+
+  const level = Math.floor(n / 2);
+  for (let l = 0; l < level; l++) {
+    let temp = [];
+    for (let i = 0; i < n - l * 2 - 1; i++) {
+      temp[i] = matrix[l][i + l];
+    }
+    for (let i = 0; i < n - l * 2 - 1; i++) {
+      // 左边
+      matrix[l][i] = matrix[n - l - i - 1][l];
+      // 下边
+      matrix[n - l - i - 1][l] = matrix[n - l - 1][n - 1 - i - l];
+      // 右边
+      matrix[n - l - 1][n - l - 1 - i] = matrix[i][n - l - 1];
+      // 上边 第l行，第l到n-l-1列
+      matrix[i][n - l - 1] = temp[i];
+    }
+  }
+};
+```
+
+### 零矩阵
+
+```js
+var setZeroes = function (matrix) {
+  const row = {};
+  const col = {};
+  const rows = matrix.length;
+  if (rows === 0) {
+    return [];
+  }
+  const cols = matrix[0].length;
+  for (let i = 0; i < rows; i++) {
+    for (let j = 0; j < cols; j++) {
+      if (matrix[i][j] === 0) {
+        row[i] = true;
+        col[j] = true;
+      }
+    }
+  }
+  for (let i = 0; i < rows; i++) {
+    for (let j = 0; j < cols; j++) {
+      if (row[i] || col[j]) {
+        matrix[i][j] = 0;
+      }
+    }
+  }
+};
+```

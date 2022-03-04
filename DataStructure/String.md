@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2022-02-10 15:24:51
- * @LastEditTime: 2022-02-28 14:53:26
+ * @LastEditTime: 2022-03-01 15:31:41
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: /algorithm/DataStructure/String.md
@@ -137,5 +137,37 @@ var strToInt = function (str) {
     index++;
   }
   return num * flag;
+};
+```
+
+### 字符串压缩
+
+**_ 金典 01.06 _**
+
+#### 思路
+
+双指针
+
+#### 代码
+
+```js
+var compressString = function (s) {
+  const len = s.length;
+  let p1 = 0;
+  let p2 = 0;
+  let res = "";
+  while (p2 < s.length) {
+    res += s[p1];
+    while (s[p2] === s[p1]) {
+      p2++;
+    }
+    res += p2 - p1;
+    p1 = p2;
+  }
+  if (res.length < len) {
+    return res;
+  } else {
+    return s;
+  }
 };
 ```

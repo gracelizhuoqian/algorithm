@@ -207,3 +207,196 @@ var getIntersectionNode = function (headA, headB) {
   return null;
 };
 ```
+
+### 移除重复节点
+
+```js
+var removeDuplicateNodes = function (head) {
+  const set = {};
+  let p = head;
+  let pre = head;
+  if (!head) {
+    return null;
+  }
+  while (p) {
+    if (set[p.val] === undefined) {
+      set[p.val] = true;
+      pre = p;
+      p = p.next;
+    } else {
+      pre.next = p.next;
+      p = p.next;
+    }
+  }
+  return head;
+};
+```
+
+### 返回倒数第 K 个节点
+
+```js
+/**
+ * @param {ListNode} head
+ * @param {number} k
+ * @return {number}
+ */
+var kthToLast = function (head, k) {
+  let p1 = head;
+  let p2 = head;
+  for (let i = 0; i < k; i++) {
+    p2 = p2.next;
+  }
+  while (p2) {
+    p2 = p2.next;
+    p1 = p1.next;
+  }
+  return p1.val;
+};
+```
+
+### 删除中间节点\*
+
+**_ 2.3 _**
+
+#### 思路
+
+当前节点和后继节点的值交换，再删除后继节点
+
+#### 代码
+
+```js
+/**
+ * @param {ListNode} node
+ * @return {void} Do not return anything, modify node in-place instead.
+ */
+var deleteNode = function (node) {
+  let nextNode = node.next;
+  let temp = node.val;
+  node.val = nextNode.val;
+  nextNode.val = temp;
+  node.next = nextNode.next;
+};
+```
+
+### 分割链表
+
+**_ 2.4 _**
+
+#### 思路
+
+两个指针，一个遍历当前链表，一个指向小于数字的最后一个节点，新的小节点在该位置插入
+需要一个哨兵节点
+
+#### 代码
+
+```js
+function ListNode(val) {
+  this.val = val;
+  this.next = null;
+}
+var partition = function (head, x) {
+  let q = new ListNode(0);
+  let newHead = q;
+  q.next = head;
+  let p = q;
+  let temp = null;
+  while (p.next) {
+    if (p.next.val >= x) {
+      p = p.next;
+    } else {
+      if (p === q) {
+        p = p.next;
+        q = q.next;
+      } else {
+        // 摘下节点
+        temp = p.next;
+        p.next = p.next.next;
+        temp.next = q.next;
+        q.next = temp;
+        q = q.next;
+      }
+    }
+  }
+  return newHead.next;
+};
+```
+
+### 回文链表
+
+```js
+var isPalindrome = function (head) {
+  const pNew = new ListNode(0);
+  let len = 0;
+  let p1 = head;
+  let p2 = head;
+  let middle = null;
+  if (!head.next) {
+    return true;
+  }
+  while (p2 && p2.next) {
+    p2 = p2.next.next;
+    p1 = p1.next;
+  }
+  // 奇数节点
+  if (p2) {
+    middle = p1;
+    p1 = p1.next;
+  }
+  if (!p2) {
+    middle = pNew;
+    pNew.next = p1;
+  }
+  let temp = null;
+  while (p1 && p1.next) {
+    temp = p1.next;
+    p1.next = temp.next;
+    temp.next = middle.next;
+    middle.next = temp;
+  }
+  p1 = middle.next;
+  p2 = head;
+  while (p1 && p2) {
+    if (p1.val === p2.val) {
+      p1 = p1.next;
+      p2 = p2.next;
+    } else {
+      return false;
+    }
+  }
+  return true;
+};
+```
+
+### 环线检测
+
+#### 思路
+
+双指针，快慢指针一定会相遇。从相遇的地方再次相遇会在环开始处。
+
+#### 代码
+
+```js
+var detectCycle = function (head) {
+  let fast = head;
+  let slow = head;
+  if (!head) {
+    return null;
+  }
+  while (fast && fast.next) {
+    fast = fast.next.next;
+    slow = slow.next;
+    if (fast === slow) {
+      break;
+    }
+  }
+  if (!fast || !fast.next) {
+    return null;
+  }
+  slow = head;
+  while (fast !== slow) {
+    fast = fast.next;
+    slow = slow.next;
+  }
+  return fast;
+};
+```
