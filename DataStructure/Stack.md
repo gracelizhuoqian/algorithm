@@ -11,9 +11,9 @@
 
 ```js
 var MyStack = function () {
-  this.queue1 = []
-  this.queue2 = []
-}
+  this.queue1 = [];
+  this.queue2 = [];
+};
 
 /**
  * Push element x onto stack.
@@ -22,26 +22,26 @@ var MyStack = function () {
  */
 MyStack.prototype.push = function (x) {
   if (this.queue1.length) {
-    this.queue1.push(x)
+    this.queue1.push(x);
   } else {
-    this.queue2.push(x)
+    this.queue2.push(x);
   }
-}
+};
 
 /**
  * Removes the element on top of the stack and returns that element.
  * @return {number}
  */
 MyStack.prototype.pop = function () {
-  let currentQueue = this.queue1.length ? this.queue1 : this.queue2
-  let emptyQueue = this.queue1.length ? this.queue2 : this.queue1
+  let currentQueue = this.queue1.length ? this.queue1 : this.queue2;
+  let emptyQueue = this.queue1.length ? this.queue2 : this.queue1;
   if (currentQueue.length) {
     while (currentQueue.length > 1) {
-      emptyQueue.push(currentQueue.shift())
+      emptyQueue.push(currentQueue.shift());
     }
-    return currentQueue.shift()
+    return currentQueue.shift();
   }
-}
+};
 ```
 
 ### 栈的压入、弹出序列
@@ -70,28 +70,93 @@ push(5), pop() -> 5, pop() -> 3, pop() -> 2, pop() -> 1
  * @return {boolean}
  */
 var validateStackSequences = function (pushed, popped) {
-  const stack = []
-  let pushedIndex = 0
+  const stack = [];
+  let pushedIndex = 0;
   if (pushed.length !== popped.length) {
-    return false
+    return false;
   }
   for (let i = 0; i < popped.length; i++) {
     // 当前栈顶是要弹出元素
     if (popped[i] === stack[stack.length - 1]) {
-      stack.pop()
+      stack.pop();
     } else {
       while (pushedIndex < pushed.length && pushed[pushedIndex] !== popped[i]) {
-        stack.push(pushed[pushedIndex])
-        pushedIndex++
+        stack.push(pushed[pushedIndex]);
+        pushedIndex++;
       }
       if (pushedIndex === pushed.length) {
-        return false
+        return false;
       }
       if (pushed[pushedIndex] === popped[i]) {
-        pushedIndex++
+        pushedIndex++;
       }
     }
   }
-  return true
-}
+  return true;
+};
+```
+
+```js
+/**
+ * @param {number} stackSize
+ */
+var TripleInOne = function (stackSize) {
+  this.stack = [[], [], []];
+  this.size = stackSize;
+};
+
+/**
+ * @param {number} stackNum
+ * @param {number} value
+ * @return {void}
+ */
+TripleInOne.prototype.push = function (stackNum, value) {
+  if (this.stack[stackNum].length === this.size) {
+    return;
+  } else {
+    this.stack[stackNum].push(value);
+  }
+};
+
+/**
+ * @param {number} stackNum
+ * @return {number}
+ */
+TripleInOne.prototype.pop = function (stackNum) {
+  if (this.stack[stackNum].length === 0) {
+    return -1;
+  } else {
+    return this.stack[stackNum].pop();
+  }
+};
+
+/**
+ * @param {number} stackNum
+ * @return {number}
+ */
+TripleInOne.prototype.peek = function (stackNum) {
+  let len = this.stack[stackNum].length;
+  if (len === 0) {
+    return -1;
+  } else {
+    return this.stack[stackNum][len - 1];
+  }
+};
+
+/**
+ * @param {number} stackNum
+ * @return {boolean}
+ */
+TripleInOne.prototype.isEmpty = function (stackNum) {
+  return this.stack[stackNum].length === 0;
+};
+
+/**
+ * Your TripleInOne object will be instantiated and called as such:
+ * var obj = new TripleInOne(stackSize)
+ * obj.push(stackNum,value)
+ * var param_2 = obj.pop(stackNum)
+ * var param_3 = obj.peek(stackNum)
+ * var param_4 = obj.isEmpty(stackNum)
+ */
 ```
