@@ -673,3 +673,36 @@ var listOfDepth = function (tree) {
   return result;
 };
 ```
+
+### 检查是否平衡二叉树
+
+```js
+const checkBalanced = (root) => {
+  if (!root) {
+    return 0;
+  }
+  let leftHight = checkBalanced(root.left);
+  if (leftHight < 0) {
+    return -1;
+  }
+  let rightHight = checkBalanced(root.right);
+  if (rightHight < 0) {
+    return -1;
+  }
+  if (Math.abs(leftHight - rightHight) <= 1) {
+    return Math.max(leftHight, rightHight) + 1;
+  } else {
+    return -1;
+  }
+};
+var isBalanced = function (root) {
+  if(!root){
+    return true;
+  }
+  if (checkBalanced(root) > 0) {
+    return true;
+  } else {
+    return false;
+  }
+};
+```
