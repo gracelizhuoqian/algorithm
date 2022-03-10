@@ -601,3 +601,75 @@ var lowestCommonAncestor = function (root, p, q) {
   return target;
 };
 ```
+
+### 构造二叉搜索树
+
+#### 代码
+
+```js
+var sortedArrayToBST = function (nums) {
+  return constructBST(nums, 0, nums.length - 1);
+};
+const constructBST = (nums, start, end) => {
+  if (start > end) {
+    return null;
+  }
+  if (start === end) {
+    return new TreeNode(nums[end]);
+  }
+  let mid = Math.floor((start + end) / 2);
+  let root = new TreeNode(nums[mid]);
+  root.left = constructBST(nums, start, mid - 1);
+  root.right = constructBST(nums, mid + 1, end);
+  return root;
+};
+```
+
+### 特定深度节点链表
+
+**_ 面试题 04.03. _**
+
+#### 思路
+
+1. 队列
+2. 两个节点，一个指向当前层的最后，一个指向下一层的最后，当遍历的节点到达当前层的最后则将下一层的最后赋给当前层更新。
+
+#### 代码
+
+```js
+/**
+ * @param {TreeNode} tree
+ * @return {ListNode[]}
+ */
+var listOfDepth = function (tree) {
+  let currentLevelTail = tree;
+  if (!tree) {
+    return [];
+  }
+  let nextLevelTail;
+  const queue = [];
+  const result = [];
+  let head = new ListNode(0);
+  let p = head;
+  queue.push(tree);
+  while (queue.length) {
+    let curNode = queue.shift();
+    p.next = new ListNode(curNode.val);
+    p = p.next;
+    if (curNode.left) {
+      queue.push(curNode.left);
+      nextLevelTail = curNode.left;
+    }
+    if (curNode.right) {
+      queue.push(curNode.right);
+      nextLevelTail = curNode.right;
+    }
+    if (curNode === currentLevelTail) {
+      currentLevelTail = nextLevelTail;
+      result.push(head.next);
+      p = head;
+    }
+  }
+  return result;
+};
+```
